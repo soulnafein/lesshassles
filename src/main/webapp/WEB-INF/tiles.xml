@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+	<definition name="welcome" template="/WEB-INF/jsp/layout.jsp">
+		<put-attribute name="title" value="Lesshassles - A simple collaboration tool" />
+		<put-attribute name="body" value="/WEB-INF/jsp/welcome.jsp" />
+	</definition>
+	<definition name="taskListForm" template="/WEB-INF/jsp/layout.jsp">
+		<put-attribute name="title" value="Lesshassles - Create a new task list" />
+		<put-attribute name="body" value="/WEB-INF/jsp/taskListForm.jsp" />
+		<put-attribute name="scripts" value="/WEB-INF/jsp/taskListForm.js" />
+	</definition>
+	<definition name="taskListShow" template="/WEB-INF/jsp/layout.jsp">
+		<put-attribute name="title" value="Lesshassles - Task list" />
+		<put-attribute name="body" value="/WEB-INF/jsp/taskListShow.jsp" />
+	</definition>	
+</tiles-definitions>
