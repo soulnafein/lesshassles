@@ -14,9 +14,12 @@ public class TaskListDAOHibernateImpl implements TaskListDAO {
 	public Integer makePersistent(TaskList taskList) {
 		return (Integer)sessionFactory.getCurrentSession().save(taskList);
 	}
+	
+	public void update(TaskList taskList) {
+		sessionFactory.getCurrentSession().update(taskList);
+	}
 
 	public TaskList findById(Integer id) {
 		return (TaskList)sessionFactory.getCurrentSession().get(TaskList.class, id);
 	}
-
 }

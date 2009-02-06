@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnit44Runner;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import static org.springframework.test.web.ModelAndViewAssert.*;
 
@@ -25,7 +24,7 @@ public class TaskListControllerTest {
 	private TaskListController controller;
 	@Mock private TaskListService taskListService;
 	private MockHttpServletRequest request;
-	private MockHttpServletResponse response;
+	
 	private static final Integer A_TASK_LIST_ID = 15;
 	
 	@Before
@@ -36,8 +35,6 @@ public class TaskListControllerTest {
 		request = new MockHttpServletRequest();
 		request.setMethod("GET");
 		request.setRequestURI(String.format("/tasklists/%d.htm", A_TASK_LIST_ID));
-		
-		response = new MockHttpServletResponse();
 		
 	}
 	
@@ -67,41 +64,22 @@ public class TaskListControllerTest {
 	public void shouldShowTasksListViewPage() throws IOException {
 		TaskList taskList = new TaskList("A task list");
 		taskList.setId(A_TASK_LIST_ID);
-		taskList.addTask("Task 1");
-		taskList.addTask("Task 2");
-		taskList.addTask("Task 3");
+		taskList.addTask(new Task("Task 1"));
+		taskList.addTask(new Task("Task 2"));
+		taskList.addTask(new Task("Task 3"));
 		
 		when(taskListService.findById(A_TASK_LIST_ID)).thenReturn(taskList);
 		
-		ModelAndView mav = controller.show(request, response);
+		ModelAndView mav = controller.show(request);
 		
 		assertNotNull(mav);
 		assertViewName(mav, "taskListShow");
 		assertModelAttributeAvailable(mav, "taskList");
+		assertModelAttributeAvailable(mav, "task");
 		TaskList model = (TaskList)mav.getModel().get("taskList");
 		assertEquals(taskList.getTasks().size(), model.getTasks().size());
 		for(Task task : model.getTasks()) {
 			assertEquals(taskList, task.getTaskList());
 		}
-	}
-	
-	@Test
-	public void shouldShow404PageWhenTaskListNotFound() throws IOException {
-		when(taskListService.findById(A_TASK_LIST_ID)).thenReturn(null);
-		
-		ModelAndView mav = controller.show(request, response);
-		
-		assertNull(mav);
-		assertEquals(MockHttpServletResponse.SC_NOT_FOUND, response.getStatus());
-	}
-	
-	@Test
-	public void shouldShow404PageWhenIdNotParsable() throws IOException {
-		request.setRequestURI("/tasklists/xxx.do");
-		
-		ModelAndView mav = controller.show(request, response);
-		
-		assertNull(mav);
-		assertEquals(MockHttpServletResponse.SC_NOT_FOUND, response.getStatus());
 	}
 }

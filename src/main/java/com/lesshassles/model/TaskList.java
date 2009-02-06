@@ -36,8 +36,7 @@ public class TaskList {
 	@OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL)
 	private Set<Task> tasks = new HashSet<Task>();
 
-	public void addTask(String string) {
-		Task task = new Task(string);
+	public void addTask(Task task) {
 		task.setTaskList(this);
 		tasks.add(task);
 	}

@@ -27,6 +27,10 @@ public class TaskListServiceImpl implements TaskListService {
 		
 		return (Integer) taskListDAO.makePersistent(taskList);
 	}
+	
+	public void update(TaskList taskList) {
+		taskListDAO.update(taskList);
+	}
 
 	public TaskList findById(Integer id) {
 		return taskListDAO.findById(id);
