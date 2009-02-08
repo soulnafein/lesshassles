@@ -11,6 +11,8 @@
 		<link href="/css/style.css" rel="stylesheet" type="text/css" />
 		<script src="/js/jquery.js" type="text/javascript"></script>
 		<script src="/js/jquery.validate.pack.js" type="text/javascript"></script>
+		<script src="/js/jquery.form.js" type="text/javascript"></script>
+		<script src="/js/jquery.ui.all.js" type="text/javascript"></script>
 		<tiles:insertAttribute ignore="true" name="scripts" />
 	</head>
 	<body>

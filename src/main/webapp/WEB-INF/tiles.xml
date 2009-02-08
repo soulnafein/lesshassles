@@ -9,11 +9,13 @@
 	</definition>
 	<definition name="taskListForm" template="/WEB-INF/jsp/layout.jsp">
 		<put-attribute name="title" value="Lesshassles - Create a new task list" />
-		<put-attribute name="body" value="/WEB-INF/jsp/taskListForm.jsp" />
-		<put-attribute name="scripts" value="/WEB-INF/jsp/taskListForm.js" />
+		<put-attribute name="body" value="/WEB-INF/jsp/taskLists/form.jsp" />
+		<put-attribute name="scripts" value="/WEB-INF/jsp/taskLists/form.js" />
 	</definition>
 	<definition name="taskListShow" template="/WEB-INF/jsp/layout.jsp">
 		<put-attribute name="title" value="Lesshassles - Task list" />
-		<put-attribute name="body" value="/WEB-INF/jsp/taskListShow.jsp" />
+		<put-attribute name="body" value="/WEB-INF/jsp/taskLists/show.jsp" />
+		<put-attribute name="scripts" value="/WEB-INF/jsp/taskLists/show.js" />
 	</definition>	
+	<definition name="taskShowJson" template="/WEB-INF/jsp/tasks/showJson.jsp" />
 </tiles-definitions>

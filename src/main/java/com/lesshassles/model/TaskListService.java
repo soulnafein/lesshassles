@@ -1,14 +1,11 @@
 package com.lesshassles.model;
 
-
 public interface TaskListService {
 
-	Integer save(TaskList taskList);
-	
-	void update(TaskList taskList);
+    Integer save(TaskList taskList);
 
-	TaskList findById(Integer id);
+    void update(TaskList taskList);
 
-	
+    TaskList findById(Integer id);
 
 }

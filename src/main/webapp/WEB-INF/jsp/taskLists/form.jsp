@@ -6,7 +6,7 @@
 		<label for="taskListName">Name your new list (e.g. Things I need to do today)</label>
 	</p>
 	<p>
-		<form:input path="name" />
+		<form:input path="description" />
 	</p>
-	<p><input id="submit" type="submit" value="Create this list" /> or <a href="#">cancel</a></p> 
+	<p><input id="submit" type="submit" value="Add task" /> or <a href="#">cancel</a></p> 
 </form:form>
