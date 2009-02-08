@@ -1,5 +1,6 @@
 package com.lesshassles.model;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,4 +55,8 @@ public class TaskListServiceImpl implements TaskListService {
 	Matcher matcher = pattern.matcher(name);
 	return matcher.replaceAll(replaceStr).trim();
     }
+
+	public List<TaskList> findAll() {
+		return taskListDAO.findAll();
+	}
 }

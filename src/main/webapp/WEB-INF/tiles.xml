@@ -16,6 +16,10 @@
 		<put-attribute name="title" value="Lesshassles - Task list" />
 		<put-attribute name="body" value="/WEB-INF/jsp/taskLists/show.jsp" />
 		<put-attribute name="scripts" value="/WEB-INF/jsp/taskLists/show.js" />
-	</definition>	
+	</definition>
+	<definition name="taskListBrowse" template="/WEB-INF/jsp/layout.jsp">
+		<put-attribute name="title" value="Lesshassles - Your task lists" />
+		<put-attribute name="body" value="/WEB-INF/jsp/taskLists/browse.jsp" />
+	</definition>		
 	<definition name="taskShowJson" template="/WEB-INF/jsp/tasks/showJson.jsp" />
 </tiles-definitions>

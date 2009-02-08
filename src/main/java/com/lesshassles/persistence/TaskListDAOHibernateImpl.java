@@ -1,5 +1,7 @@
 package com.lesshassles.persistence;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,4 +25,9 @@ public class TaskListDAOHibernateImpl implements TaskListDAO {
 	return (TaskList) sessionFactory.getCurrentSession().get(
 		TaskList.class, id);
     }
+
+    @SuppressWarnings("unchecked")
+	public List<TaskList> findAll() {
+		return sessionFactory.getCurrentSession().createQuery("from TaskList").list();
+	}
 }

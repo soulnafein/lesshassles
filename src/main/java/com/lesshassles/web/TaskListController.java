@@ -1,6 +1,7 @@
 package com.lesshassles.web;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,4 +52,10 @@ public class TaskListController {
     public void setTaskListService(TaskListService taskListService) {
 	this.taskListService = taskListService;
     }
+
+    @RequestMapping(value = "browse.htm")
+	public ModelAndView browse() {
+    	List<TaskList> taskLists = taskListService.findAll();
+		return new ModelAndView("taskListBrowse", "taskLists", taskLists);
+	}
 }
