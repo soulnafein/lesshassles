@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.validator.Pattern;
+
 @Entity
 public class TaskList {
 	public TaskList() {
@@ -32,6 +34,7 @@ public class TaskList {
 		this.id = id;
 	}
 
+	@Pattern(regex = "([a-zA-Z0-9.\\(\\)\\-']+\\s)*[a-zA-Z0-9.\\(\\)\\-']+") 
 	private String name;
 
 	public String getName() {

@@ -37,11 +37,10 @@ public class TasksController {
 		Integer taskListId = Integer.parseInt(request.getRequestURI()
 				.replaceAll(".*?\\/tasklists\\/(\\d*?)\\/.*", "$1"));
 		TaskList taskList = taskListService.findById(taskListId);
+		task.setTaskList(taskList);
 
 		if (taskList.getTasks().contains(task)) {
-			throw new IllegalArgumentException(String.format(
-					"Task \"%s\" already in task list \"%s\"", task
-							.getDescription(), taskList.getName()));
+			return "taskErrorDuplicateEntry";
 		}
 
 		taskList.addTask(task);

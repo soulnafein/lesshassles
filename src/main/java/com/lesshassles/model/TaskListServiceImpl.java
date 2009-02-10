@@ -13,48 +13,39 @@ import com.lesshassles.persistence.TaskListDAO;
 @Service
 @Transactional
 public class TaskListServiceImpl implements TaskListService {
-    @Autowired
-    TaskListDAO taskListDAO;
+	@Autowired
+	TaskListDAO taskListDAO;
 
-    public Integer save(TaskList taskList) {
-	if (taskList == null)
-	    throw new IllegalArgumentException(String.format(
-		    "%s save(TaskList taskList): taskList must be not null",
-		    this.getClass().getName()));
+	public Integer save(TaskList taskList) {
+		if (taskList == null)
+			throw new IllegalArgumentException(String.format(
+					"%s save(TaskList taskList): taskList must be not null",
+					this.getClass().getName()));
 
-	taskList.setName(removeDuplicateWhitespacesAndTrim(taskList.getName()));
+		taskList.setName(removeDuplicateWhitespacesAndTrim(taskList.getName()));
 
-	TaskListSpecification taskListSpecification = new TaskListSpecification();
+		return (Integer) taskListDAO.makePersistent(taskList);
+	}
 
-	if (!taskListSpecification.isSatisfiedBy(taskList))
-	    throw new IllegalArgumentException(
-		    String
-			    .format(
-				    "%s save(TaskList taskList): taskList does not satisfy TaskListSpecification",
-				    this.getClass().getName()));
+	public void update(TaskList taskList) {
+		taskListDAO.update(taskList);
+	}
 
-	return (Integer) taskListDAO.makePersistent(taskList);
-    }
+	public TaskList findById(Integer id) {
+		return taskListDAO.findById(id);
+	}
 
-    public void update(TaskList taskList) {
-	taskListDAO.update(taskList);
-    }
+	public void setTaskListDAO(TaskListDAO taskListDAO) {
+		this.taskListDAO = taskListDAO;
+	}
 
-    public TaskList findById(Integer id) {
-	return taskListDAO.findById(id);
-    }
-
-    public void setTaskListDAO(TaskListDAO taskListDAO) {
-	this.taskListDAO = taskListDAO;
-    }
-
-    private String removeDuplicateWhitespacesAndTrim(String name) {
-	String patternStr = "\\s+";
-	String replaceStr = " ";
-	Pattern pattern = Pattern.compile(patternStr);
-	Matcher matcher = pattern.matcher(name);
-	return matcher.replaceAll(replaceStr).trim();
-    }
+	private String removeDuplicateWhitespacesAndTrim(String name) {
+		String patternStr = "\\s+";
+		String replaceStr = " ";
+		Pattern pattern = Pattern.compile(patternStr);
+		Matcher matcher = pattern.matcher(name);
+		return matcher.replaceAll(replaceStr).trim();
+	}
 
 	public List<TaskList> findAll() {
 		return taskListDAO.findAll();

@@ -1,6 +1,8 @@
 package com.lesshassles.web;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
@@ -75,20 +77,16 @@ public class TasksControllerTest {
 	}
 
 	@Test
-	public void shouldThrowExceptionWhenTryingToAddTaskTwice() {
+	public void shouldReturnErrorMessageWhenTryingToAddTaskTwice() {
 		request.setRequestURI(String.format("/tasklists/%d/tasks/new.htm",
 				A_TASK_LIST_ID));
-		
+
 		when(taskListService.findById(A_TASK_LIST_ID)).thenReturn(taskList);
-		
-		Task task = taskList.getTasks().iterator().next();
-		
-		try {
-			controller.submitForm(task, request);
-			fail();
-		} catch(IllegalArgumentException ex) {
-		}
-		
+
+		Task task = new Task(taskList.getTasks().iterator().next().getDescription());
+
+		String view = controller.submitForm(task, request);
+		assertEquals("taskErrorDuplicateEntry", view);
 	}
 
 	@Test

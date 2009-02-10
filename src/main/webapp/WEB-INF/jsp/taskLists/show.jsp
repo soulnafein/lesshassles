@@ -7,6 +7,7 @@
 	</c:forEach>
 </ul>
 <a id="showAddTaskForm" href="#">Add another task</a>
+
 <form:form modelAttribute="task" action="/tasklists/${taskList.id}/tasks/new.htm" cssStyle="display:none">
 	<p>
 		<form:input path="description" />

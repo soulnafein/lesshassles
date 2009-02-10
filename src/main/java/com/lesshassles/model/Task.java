@@ -1,11 +1,13 @@
 package com.lesshassles.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.validator.NotNull;
+import org.hibernate.validator.Pattern;
 
 @Entity
 public class Task {
@@ -30,7 +32,8 @@ public class Task {
 		this.id = id;
 	}
 
-	@Column(nullable = false)
+	@Pattern(regex = "([a-zA-Z0-9.\\(\\)\\-']+\\s)*[a-zA-Z0-9.\\(\\)\\-']+")
+	@NotNull
 	private String description;
 
 	public String getDescription() {

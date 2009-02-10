@@ -54,8 +54,8 @@ public class TaskListController {
     }
 
     @RequestMapping(value = "browse.htm")
-	public ModelAndView browse() {
-    	List<TaskList> taskLists = taskListService.findAll();
-		return new ModelAndView("taskListBrowse", "taskLists", taskLists);
-	}
+    public ModelAndView browse() {
+	List<TaskList> taskLists = taskListService.findAll();
+	return new ModelAndView("taskListBrowse", "taskLists", taskLists);
+    }
 }

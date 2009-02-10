@@ -8,5 +8,5 @@
 	<p>
 		<form:input path="name" />
 	</p>
-	<p><input id="submit" type="submit" value="Add task" /> or <a href="#">cancel</a></p> 
+	<p><input id="submit" type="submit" value="Create this list" /> or <a href="/tasklists/browse.htm">cancel</a></p> 
 </form:form>
