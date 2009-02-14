@@ -20,42 +20,42 @@ import com.lesshassles.model.TaskListService;
 @RequestMapping("/tasklists/*.htm")
 public class TaskListController {
 
-    @Autowired
-    TaskListService taskListService;
+	@Autowired
+	TaskListService taskListService;
 
-    @RequestMapping(value = "new.htm", method = RequestMethod.GET)
-    public ModelAndView showForm() {
-	return new ModelAndView("taskListForm").addObject(new TaskList());
-    }
+	@RequestMapping(value = "new.htm", method = RequestMethod.GET)
+	public ModelAndView showForm() {
+		return new ModelAndView("taskListForm").addObject(new TaskList());
+	}
 
-    @RequestMapping(value = "new.htm", method = RequestMethod.POST)
-    public String submitForm(@ModelAttribute("taskList") TaskList taskList) {
-	Integer id = taskListService.save(taskList);
-	String view = String.format("redirect:/tasklists/%d.htm", id);
-	return view;
-    }
+	@RequestMapping(value = "new.htm", method = RequestMethod.POST)
+	public String submitForm(@ModelAttribute("taskList") TaskList taskList) {
+		Integer id = taskListService.save(taskList);
+		String view = String.format("redirect:/tasklists/%d.htm", id);
+		return view;
+	}
 
-    @RequestMapping(value = "*.htm")
-    public ModelAndView show(HttpServletRequest request) throws IOException {
+	@RequestMapping(value = "*.htm")
+	public ModelAndView show(HttpServletRequest request) throws IOException {
 
-	Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
-		".*?(\\d*?)\\.htm", "$1"));
+		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
+				".*?(\\d*?)\\.htm", "$1"));
 
-	TaskList taskList = taskListService.findById(id);
+		TaskList taskList = taskListService.findById(id);
 
-	ModelAndView mav = new ModelAndView("taskListShow", "taskList",
-		taskList);
-	mav.addObject("task", new Task(""));
-	return mav;
-    }
+		ModelAndView mav = new ModelAndView("taskListShow", "taskList",
+				taskList);
+		mav.addObject("task", new Task(""));
+		return mav;
+	}
 
-    public void setTaskListService(TaskListService taskListService) {
-	this.taskListService = taskListService;
-    }
+	public void setTaskListService(TaskListService taskListService) {
+		this.taskListService = taskListService;
+	}
 
-    @RequestMapping(value = "browse.htm")
-    public ModelAndView browse() {
-	List<TaskList> taskLists = taskListService.findAll();
-	return new ModelAndView("taskListBrowse", "taskLists", taskLists);
-    }
+	@RequestMapping(value = "browse.htm")
+	public ModelAndView browse() {
+		List<TaskList> taskLists = taskListService.findAll();
+		return new ModelAndView("taskListBrowse", "taskLists", taskLists);
+	}
 }

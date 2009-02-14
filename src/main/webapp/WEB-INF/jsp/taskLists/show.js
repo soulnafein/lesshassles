@@ -20,26 +20,25 @@
 	    
 	    $.validator.addMethod('validTaskDescription', function (value) { 
 		    return /^[a-zA-Z0-9.'\(\)\-\s]+$/.test(value); 
-		}, 'Please enter a valid task list name.');
-
-		$("#task").validate({
+		}, 'Please enter a valid task name.');
+	    
+	    $("#task").validate({
 			rules: {
-				name: {
+				description: {
 					required: true,
 					validTaskDescription: true
 				}
 			},
 			messages: {
-				name: {
+				description: {
 					required: "Please enter a description for your task.",
 					validTaskListName: "The description you provided contains invalid characters (allowed characters: letters, digits, spaces and ().'-)"
 				}
 			}
-		});
+		})
 	});
 
 	function validateForm() {
-		alert("Experiment!");
 		return $("#task").valid();
 	}
 	

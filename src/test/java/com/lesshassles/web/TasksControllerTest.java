@@ -83,7 +83,8 @@ public class TasksControllerTest {
 
 		when(taskListService.findById(A_TASK_LIST_ID)).thenReturn(taskList);
 
-		Task task = new Task(taskList.getTasks().iterator().next().getDescription());
+		Task task = new Task(taskList.getTasks().iterator().next()
+				.getDescription());
 
 		String view = controller.submitForm(task, request);
 		assertEquals("taskErrorDuplicateEntry", view);
