@@ -34,6 +34,7 @@
     <!-- List all the mapping documents we're using -->
     <mapping class="com.lesshassles.model.TaskList"/>
     <mapping class="com.lesshassles.model.Task"/>
+    <mapping class="com.lesshassles.model.User"/>
         
   </session-factory>
 </hibernate-configuration>

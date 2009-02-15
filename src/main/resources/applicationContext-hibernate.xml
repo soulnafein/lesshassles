@@ -12,8 +12,7 @@
 	<context:property-placeholder location="classpath:jdbc.properties" />
 
 	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-		destroy-method="close" p:driverClassName="${jdbc.driverClassName}"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource" p:driverClassName="${jdbc.driverClassName}"
 		p:url="${jdbc.url}" p:username="${jdbc.username}" p:password="${jdbc.password}" />
 
 	<!-- Hibernate SessionFactory -->
@@ -24,6 +23,7 @@
 			<list>
 				<value>com.lesshassles.model.TaskList</value>
 				<value>com.lesshassles.model.Task</value>
+				<value>com.lesshassles.model.User</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
