@@ -11,14 +11,14 @@ import org.mockito.runners.MockitoJUnit44Runner;
 import com.lesshassles.persistence.TaskListDAO;
 
 @RunWith(MockitoJUnit44Runner.class)
-public class TaskListServiceImplTest {
-	private TaskListServiceImpl taskListService;
+public class TaskListServiceTest {
+	private TaskListService taskListService;
 	@Mock
 	private TaskListDAO taskListDAO;
 
 	@Before
 	public void setUp() {
-		taskListService = new TaskListServiceImpl();
+		taskListService = new TaskListService();
 		taskListService.setTaskListDAO(taskListDAO);
 	}
 

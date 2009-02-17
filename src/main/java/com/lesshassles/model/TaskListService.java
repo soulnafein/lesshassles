@@ -1,15 +1,53 @@
 package com.lesshassles.model;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public interface TaskListService {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-    Integer save(TaskList taskList);
+import com.lesshassles.persistence.TaskListDAO;
 
-    void update(TaskList taskList);
+@Service
+@Transactional
+public class TaskListService {
+	@Autowired
+	TaskListDAO taskListDAO;
 
-    TaskList findByIdAndOwner(Integer id, User owner);
+	public Integer save(TaskList taskList) {
+		if (taskList == null)
+			throw new IllegalArgumentException(String.format(
+					"%s save(TaskList taskList): taskList must be not null",
+					this.getClass().getName()));
 
-	List<TaskList> findByOwner(User owner);
+		taskList.setName(removeDuplicateWhitespacesAndTrim(taskList.getName()));
 
+		return (Integer) taskListDAO.makePersistent(taskList);
+	}
+
+	public void update(TaskList taskList) {
+		taskListDAO.update(taskList);
+	}
+
+	public TaskList findByIdAndOwner(Integer id, User owner) {
+		return taskListDAO.findByIdAndOwner(id, owner);
+	}
+
+	public void setTaskListDAO(TaskListDAO taskListDAO) {
+		this.taskListDAO = taskListDAO;
+	}
+
+	private String removeDuplicateWhitespacesAndTrim(String name) {
+		String patternStr = "\\s+";
+		String replaceStr = " ";
+		Pattern pattern = Pattern.compile(patternStr);
+		Matcher matcher = pattern.matcher(name);
+		return matcher.replaceAll(replaceStr).trim();
+	}
+
+	public List<TaskList> findByOwner(User owner) {
+		return taskListDAO.findByOwner(owner);
+	}
 }

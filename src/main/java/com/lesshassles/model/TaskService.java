@@ -1,7 +1,20 @@
 package com.lesshassles.model;
 
-public interface TaskService {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-    Task findById(Integer id);
+import com.lesshassles.persistence.TaskDAO;
+
+@Service
+@Transactional
+public class TaskService {
+
+	@Autowired
+	TaskDAO taskDAO;
+
+	public Task findById(Integer id) {
+		return taskDAO.findById(id);
+	}
 
 }

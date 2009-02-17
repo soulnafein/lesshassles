@@ -2,15 +2,38 @@ package com.lesshassles.persistence;
 
 import java.util.List;
 
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.User;
 
-public interface TaskListDAO {
-    Integer makePersistent(TaskList taskList);
+@Repository
+public class TaskListDAO {
+	@Autowired
+	private SessionFactory sessionFactory;
 
-    TaskList findByIdAndOwner(Integer id, User owner);
+	public Integer makePersistent(TaskList taskList) {
+		return (Integer) sessionFactory.getCurrentSession().save(taskList);
+	}
 
-    void update(TaskList taskList);
+	public void update(TaskList taskList) {
+		sessionFactory.getCurrentSession().update(taskList);
+	}
 
-	List<TaskList> findByOwner(User owner);
+	public TaskList findByIdAndOwner(Integer id, User owner) {
+		return (TaskList) sessionFactory.getCurrentSession()
+				.createQuery("from TaskList where id = :id and owner = :owner")
+				.setInteger("id", id)
+				.setEntity("owner", owner)
+				.uniqueResult();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<TaskList> findByOwner(User owner) {
+		return sessionFactory.getCurrentSession().createQuery("from TaskList where owner = :owner")
+				.setEntity("owner", owner)
+				.list();
+	}
 }
