@@ -22,16 +22,17 @@ import com.lesshassles.model.Task;
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.TaskService;
+import com.lesshassles.model.User;
 
 @RunWith(MockitoJUnit44Runner.class)
 public class TasksControllerTest {
 	private TasksController controller;
-	@Mock
-	private TaskListService taskListService;
-	@Mock
-	private TaskService taskService;
+	@Mock private TaskListService taskListService;
+	@Mock private TaskService taskService;
+	@Mock private AuthenticationService authenticationService;
 	private MockHttpServletRequest request;
 	private TaskList taskList;
+	private User authenticatedUser;
 	private static final Integer A_TASK_LIST_ID = 15;
 	private static final Integer A_TASK_ID = 2;
 
@@ -40,25 +41,26 @@ public class TasksControllerTest {
 		controller = new TasksController();
 		controller.setTaskListService(taskListService);
 		controller.setTaskService(taskService);
+		controller.setAuthenticationService(authenticationService);
 
 		request = new MockHttpServletRequest();
 		request.setMethod("GET");
-		request.setRequestURI(String
-				.format("/tasklists/%d.htm", A_TASK_LIST_ID));
+		request.setRequestURI(String.format("/tasklists/%d/tasks/new.htm",
+				A_TASK_LIST_ID));
 
 		taskList = new TaskList("A task list");
 		taskList.setId(A_TASK_LIST_ID);
 		taskList.addTask(new Task("Task 1"));
 		taskList.addTask(new Task("Task 2"));
 		taskList.addTask(new Task("Task 3"));
+
+		authenticatedUser = new User();
+		authenticatedUser.setEmail("test@test.tst");
 	}
 
 	@Test
 	public void shouldSaveTaskAndRedirectToTaskView() {
-		request.setRequestURI(String.format("/tasklists/%d/tasks/new.htm",
-				A_TASK_LIST_ID));
-
-		when(taskListService.findById(A_TASK_LIST_ID)).thenReturn(taskList);
+		taskListLoadingExpectation();
 
 		final Task task = new Task("A task");
 		doAnswer(new Answer() {
@@ -78,10 +80,7 @@ public class TasksControllerTest {
 
 	@Test
 	public void shouldReturnErrorMessageWhenTryingToAddTaskTwice() {
-		request.setRequestURI(String.format("/tasklists/%d/tasks/new.htm",
-				A_TASK_LIST_ID));
-
-		when(taskListService.findById(A_TASK_LIST_ID)).thenReturn(taskList);
+		taskListLoadingExpectation();
 
 		Task task = new Task(taskList.getTasks().iterator().next()
 				.getDescription());
@@ -94,7 +93,6 @@ public class TasksControllerTest {
 	public void shouldCreateJsonForSpecifiedTask() {
 		request.setRequestURI(String.format("/tasklists/%d/tasks/%d.htm",
 				A_TASK_LIST_ID, A_TASK_ID));
-
 		Task task = new Task("A task from DB");
 		when(taskService.findById(A_TASK_ID)).thenReturn(task);
 
@@ -105,5 +103,10 @@ public class TasksControllerTest {
 		assertModelAttributeAvailable(mav, "task");
 		Task taskInModel = (Task) mav.getModel().get("task");
 		assertEquals(task, taskInModel);
+	}
+	
+	private void taskListLoadingExpectation() {
+		when(authenticationService.getAuthenticatedUser()).thenReturn(authenticatedUser);
+		when(taskListService.findByIdAndOwner(A_TASK_LIST_ID, authenticatedUser)).thenReturn(taskList);
 	}
 }

@@ -8,8 +8,8 @@ public interface TaskListService {
 
     void update(TaskList taskList);
 
-    TaskList findById(Integer id);
+    TaskList findByIdAndOwner(Integer id, User owner);
 
-	List<TaskList> findAll();
+	List<TaskList> findByOwner(User owner);
 
 }

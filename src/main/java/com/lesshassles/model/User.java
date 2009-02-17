@@ -3,6 +3,8 @@ package com.lesshassles.model;
 import javax.persistence.*;
 
 import org.hibernate.validator.Email;
+import org.hibernate.validator.NotEmpty;
+import org.hibernate.validator.NotNull;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.userdetails.UserDetails;
 
@@ -20,7 +22,7 @@ public class User implements UserDetails {
 		this.id = id;
 	}
 
-	@Email
+	@Email @NotNull @NotEmpty
 	private String email;
 
 	public String getEmail() {
@@ -46,7 +48,6 @@ public class User implements UserDetails {
 	}
 
 	public String getUsername() {
-		// TODO Auto-generated method stub
 		return email;
 	}
 
@@ -64,6 +65,23 @@ public class User implements UserDetails {
 
 	public boolean isEnabled() {
 		return true;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj == null || obj.getClass() != this.getClass()) {
+			return false;
+		} else {
+			User otherUser = (User) obj;
+			return this.getEmail().equals(otherUser.getEmail());
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return getEmail().hashCode();
 	}
 
 	private static final long serialVersionUID = -1617100713844967559L;

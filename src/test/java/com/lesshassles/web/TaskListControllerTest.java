@@ -21,13 +21,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.lesshassles.model.Task;
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskListService;
+import com.lesshassles.model.User;
 
 @RunWith(MockitoJUnit44Runner.class)
 public class TaskListControllerTest {
 	private TaskListController controller;
-	@Mock
-	private TaskListService taskListService;
+	@Mock private TaskListService taskListService;
+	@Mock private AuthenticationService authenticationService;
 	private MockHttpServletRequest request;
+	private User authenticatedUser;
 
 	private static final Integer A_TASK_LIST_ID = 15;
 
@@ -35,11 +37,15 @@ public class TaskListControllerTest {
 	public void setUp() {
 		controller = new TaskListController();
 		controller.setTaskListService(taskListService);
+		controller.setAuthenticationService(authenticationService);
 
 		request = new MockHttpServletRequest();
 		request.setMethod("GET");
 		request.setRequestURI(String
 				.format("/tasklists/%d.htm", A_TASK_LIST_ID));
+		
+		authenticatedUser = new User();
+		authenticatedUser.setEmail("test@test.tst");
 
 	}
 
@@ -74,7 +80,8 @@ public class TaskListControllerTest {
 		taskList.addTask(new Task("Task 2"));
 		taskList.addTask(new Task("Task 3"));
 
-		when(taskListService.findById(A_TASK_LIST_ID)).thenReturn(taskList);
+		when(authenticationService.getAuthenticatedUser()).thenReturn(authenticatedUser);
+		when(taskListService.findByIdAndOwner(A_TASK_LIST_ID, authenticatedUser)).thenReturn(taskList);
 
 		ModelAndView mav = controller.show(request);
 
@@ -101,7 +108,8 @@ public class TaskListControllerTest {
 		taskLists.add(taskList);
 		taskLists.add(taskList);
 		
-		when(taskListService.findAll()).thenReturn(taskLists);
+		when(authenticationService.getAuthenticatedUser()).thenReturn(authenticatedUser);
+		when(taskListService.findByOwner(authenticatedUser)).thenReturn(taskLists);
 		ModelAndView mav = controller.browse();
 		assertNotNull(mav);
 		assertViewName(mav, "taskListBrowse");

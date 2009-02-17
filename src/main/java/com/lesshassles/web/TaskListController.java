@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.lesshassles.model.Task;
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskListService;
+import com.lesshassles.model.User;
 
 @Controller
 @RequestMapping("/tasklists/*.htm")
@@ -22,6 +23,18 @@ public class TaskListController {
 
 	@Autowired
 	TaskListService taskListService;
+	
+	@Autowired
+	AuthenticationService authenticationService;
+	
+	public void setTaskListService(TaskListService taskListService) {
+		this.taskListService = taskListService;
+	}
+	
+	public void setAuthenticationService(
+			AuthenticationService authenticationService) {
+		this.authenticationService = authenticationService;
+	}
 
 	@RequestMapping(value = "new.htm", method = RequestMethod.GET)
 	public ModelAndView showForm() {
@@ -41,7 +54,8 @@ public class TaskListController {
 		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
 				".*?(\\d*?)\\.htm", "$1"));
 
-		TaskList taskList = taskListService.findById(id);
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		TaskList taskList = taskListService.findByIdAndOwner(id, authenticatedUser);
 
 		ModelAndView mav = new ModelAndView("taskListShow", "taskList",
 				taskList);
@@ -49,13 +63,10 @@ public class TaskListController {
 		return mav;
 	}
 
-	public void setTaskListService(TaskListService taskListService) {
-		this.taskListService = taskListService;
-	}
-
 	@RequestMapping(value = "browse.htm")
 	public ModelAndView browse() {
-		List<TaskList> taskLists = taskListService.findAll();
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		List<TaskList> taskLists = taskListService.findByOwner(authenticatedUser);
 		return new ModelAndView("taskListBrowse", "taskLists", taskLists);
 	}
 }

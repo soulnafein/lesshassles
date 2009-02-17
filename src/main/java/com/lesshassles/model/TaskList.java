@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.validator.Pattern;
@@ -34,7 +35,7 @@ public class TaskList {
 		this.id = id;
 	}
 
-	@Pattern(regex = "([a-zA-Z0-9.\\(\\)\\-']+\\s)*[a-zA-Z0-9.\\(\\)\\-']+") 
+	@Pattern(regex = "([a-zA-Z0-9.\\(\\)\\-']+\\s)*[a-zA-Z0-9.\\(\\)\\-']+")
 	private String name;
 
 	public String getName() {
@@ -43,6 +44,17 @@ public class TaskList {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@ManyToOne
+	private User owner;
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	@OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL)

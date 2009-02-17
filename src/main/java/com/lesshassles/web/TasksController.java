@@ -12,6 +12,7 @@ import com.lesshassles.model.Task;
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.TaskService;
+import com.lesshassles.model.User;
 
 @Controller
 @RequestMapping("/tasklists/*/tasks/*.htm")
@@ -22,7 +23,10 @@ public class TasksController {
 
 	@Autowired
 	TaskService taskService;
-
+	
+	@Autowired
+	AuthenticationService authenticationService;
+	
 	public void setTaskListService(TaskListService taskListService) {
 		this.taskListService = taskListService;
 	}
@@ -30,13 +34,19 @@ public class TasksController {
 	public void setTaskService(TaskService taskService) {
 		this.taskService = taskService;
 	}
+	
+	public void setAuthenticationService(AuthenticationService authenticationService) {
+		this.authenticationService = authenticationService;
+	}
 
 	@RequestMapping(value = "new.htm", method = RequestMethod.POST)
 	public String submitForm(Task task, HttpServletRequest request) {
 
 		Integer taskListId = Integer.parseInt(request.getRequestURI()
 				.replaceAll(".*?\\/tasklists\\/(\\d*?)\\/.*", "$1"));
-		TaskList taskList = taskListService.findById(taskListId);
+		
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		TaskList taskList = taskListService.findByIdAndOwner(taskListId, authenticatedUser);
 		task.setTaskList(taskList);
 
 		if (taskList.getTasks().contains(task)) {

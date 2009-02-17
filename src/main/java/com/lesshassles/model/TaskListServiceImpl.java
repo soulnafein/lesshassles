@@ -31,8 +31,8 @@ public class TaskListServiceImpl implements TaskListService {
 		taskListDAO.update(taskList);
 	}
 
-	public TaskList findById(Integer id) {
-		return taskListDAO.findById(id);
+	public TaskList findByIdAndOwner(Integer id, User owner) {
+		return taskListDAO.findByIdAndOwner(id, owner);
 	}
 
 	public void setTaskListDAO(TaskListDAO taskListDAO) {
@@ -47,7 +47,7 @@ public class TaskListServiceImpl implements TaskListService {
 		return matcher.replaceAll(replaceStr).trim();
 	}
 
-	public List<TaskList> findAll() {
-		return taskListDAO.findAll();
+	public List<TaskList> findByOwner(User owner) {
+		return taskListDAO.findByOwner(owner);
 	}
 }
