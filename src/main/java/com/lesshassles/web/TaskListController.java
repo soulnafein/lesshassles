@@ -21,18 +21,13 @@ import com.lesshassles.model.User;
 @RequestMapping("/tasklists/*.htm")
 public class TaskListController {
 
+	private TaskListService taskListService;
+	private AuthenticationService authenticationService;
+
 	@Autowired
-	TaskListService taskListService;
-	
-	@Autowired
-	AuthenticationService authenticationService;
-	
-	public void setTaskListService(TaskListService taskListService) {
-		this.taskListService = taskListService;
-	}
-	
-	public void setAuthenticationService(
+	public TaskListController(TaskListService taskListService,
 			AuthenticationService authenticationService) {
+		this.taskListService = taskListService;
 		this.authenticationService = authenticationService;
 	}
 
@@ -55,7 +50,8 @@ public class TaskListController {
 				".*?(\\d*?)\\.htm", "$1"));
 
 		User authenticatedUser = authenticationService.getAuthenticatedUser();
-		TaskList taskList = taskListService.findByIdAndOwner(id, authenticatedUser);
+		TaskList taskList = taskListService.findByIdAndOwner(id,
+				authenticatedUser);
 
 		ModelAndView mav = new ModelAndView("taskListShow", "taskList",
 				taskList);
@@ -66,7 +62,8 @@ public class TaskListController {
 	@RequestMapping(value = "browse.htm")
 	public ModelAndView browse() {
 		User authenticatedUser = authenticationService.getAuthenticatedUser();
-		List<TaskList> taskLists = taskListService.findByOwner(authenticatedUser);
+		List<TaskList> taskLists = taskListService
+				.findByOwner(authenticatedUser);
 		return new ModelAndView("taskListBrowse", "taskLists", taskLists);
 	}
 }

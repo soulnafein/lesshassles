@@ -18,24 +18,14 @@ import com.lesshassles.model.User;
 @RequestMapping("/tasklists/*/tasks/*.htm")
 public class TasksController {
 
-	@Autowired
-	TaskListService taskListService;
-
-	@Autowired
-	TaskService taskService;
+	private TaskListService taskListService;
+	private TaskService taskService;
+	private AuthenticationService authenticationService;
 	
 	@Autowired
-	AuthenticationService authenticationService;
-	
-	public void setTaskListService(TaskListService taskListService) {
+	public TasksController(TaskListService taskListService, TaskService taskService, AuthenticationService authenticationService) {
 		this.taskListService = taskListService;
-	}
-
-	public void setTaskService(TaskService taskService) {
 		this.taskService = taskService;
-	}
-	
-	public void setAuthenticationService(AuthenticationService authenticationService) {
 		this.authenticationService = authenticationService;
 	}
 

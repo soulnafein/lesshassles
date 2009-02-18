@@ -27,9 +27,12 @@ import com.lesshassles.model.User;
 @RunWith(MockitoJUnit44Runner.class)
 public class TasksControllerTest {
 	private TasksController controller;
-	@Mock private TaskListService taskListService;
-	@Mock private TaskService taskService;
-	@Mock private AuthenticationService authenticationService;
+	@Mock
+	private TaskListService taskListService;
+	@Mock
+	private TaskService taskService;
+	@Mock
+	private AuthenticationService authenticationService;
 	private MockHttpServletRequest request;
 	private TaskList taskList;
 	private User authenticatedUser;
@@ -38,10 +41,8 @@ public class TasksControllerTest {
 
 	@Before
 	public void setUp() {
-		controller = new TasksController();
-		controller.setTaskListService(taskListService);
-		controller.setTaskService(taskService);
-		controller.setAuthenticationService(authenticationService);
+		controller = new TasksController(taskListService, taskService,
+				authenticationService);
 
 		request = new MockHttpServletRequest();
 		request.setMethod("GET");
@@ -104,9 +105,12 @@ public class TasksControllerTest {
 		Task taskInModel = (Task) mav.getModel().get("task");
 		assertEquals(task, taskInModel);
 	}
-	
+
 	private void taskListLoadingExpectation() {
-		when(authenticationService.getAuthenticatedUser()).thenReturn(authenticatedUser);
-		when(taskListService.findByIdAndOwner(A_TASK_LIST_ID, authenticatedUser)).thenReturn(taskList);
+		when(authenticationService.getAuthenticatedUser()).thenReturn(
+				authenticatedUser);
+		when(
+				taskListService.findByIdAndOwner(A_TASK_LIST_ID,
+						authenticatedUser)).thenReturn(taskList);
 	}
 }
