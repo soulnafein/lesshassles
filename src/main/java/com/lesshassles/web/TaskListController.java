@@ -33,7 +33,7 @@ public class TaskListController {
 
 	@RequestMapping(value = "new.htm", method = RequestMethod.GET)
 	public ModelAndView showForm() {
-		return new ModelAndView("taskListForm").addObject(new TaskList());
+		return new ModelAndView("taskListForm").addObject(new TaskList(""));
 	}
 
 	@RequestMapping(value = "new.htm", method = RequestMethod.POST)

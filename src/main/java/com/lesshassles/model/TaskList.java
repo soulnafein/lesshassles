@@ -15,9 +15,8 @@ import org.hibernate.validator.Pattern;
 
 @Entity
 public class TaskList {
-	public TaskList() {
-
-	}
+	
+	TaskList() {}
 
 	public TaskList(String name) {
 		this.name = name;
@@ -26,58 +25,51 @@ public class TaskList {
 	@Id
 	@GeneratedValue
 	private Integer id;
+	
+	@Pattern(regex = "([a-zA-Z0-9.\\(\\)\\-']+\\s)*[a-zA-Z0-9.\\(\\)\\-']+")
+	private String name;
+	
+	@ManyToOne
+	private User owner;
+
+	@OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL)
+	private Set<Task> tasks = new HashSet<Task>();
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public TaskList setId(Integer id) {
 		this.id = id;
+		return this;
 	}
-
-	@Pattern(regex = "([a-zA-Z0-9.\\(\\)\\-']+\\s)*[a-zA-Z0-9.\\(\\)\\-']+")
-	private String name;
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public TaskList setName(String name) {
 		this.name = name;
+		return this;
 	}
-
-	@ManyToOne
-	private User owner;
 
 	public User getOwner() {
 		return owner;
 	}
 
-	public void setOwner(User owner) {
+	public TaskList setOwner(User owner) {
 		this.owner = owner;
+		return this;
 	}
 
-	@OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL)
-	private Set<Task> tasks = new HashSet<Task>();
-
-	public void addTask(Task task) {
+	public TaskList addTask(Task task) {
 		task.setTaskList(this);
 		tasks.add(task);
+		return this;
 	}
 
 	public Set<Task> getTasks() {
 		return Collections.unmodifiableSet(tasks);
-	}
-
-	public Task findTaskById(Integer taskId) {
-		Task result = null;
-		for (Task task : tasks) {
-			if (task.getId().equals(taskId)) {
-				result = task;
-				break;
-			}
-		}
-		return result;
 	}
 
 	@Override

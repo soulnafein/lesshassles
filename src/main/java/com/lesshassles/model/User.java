@@ -10,33 +10,37 @@ import org.springframework.security.userdetails.UserDetails;
 
 @Entity
 public class User implements UserDetails {
+	
 	@Id
 	@GeneratedValue
 	private Integer id;
+	
+	@Email @NotNull @NotEmpty
+	private String email;
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public User setId(Integer id) {
 		this.id = id;
+		return this;
 	}
-
-	@Email @NotNull @NotEmpty
-	private String email;
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public User setEmail(String email) {
 		this.email = email;
+		return this;
 	}
 
 	private String password;
 
-	public void setPassword(String password) {
+	public User setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 
 	public String getPassword() {

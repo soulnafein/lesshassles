@@ -45,8 +45,7 @@ public class TaskListControllerTest {
 		request.setRequestURI(String
 				.format("/tasklists/%d.htm", A_TASK_LIST_ID));
 
-		authenticatedUser = new User();
-		authenticatedUser.setEmail("test@test.tst");
+		authenticatedUser = new User().setEmail("test@test.tst");
 
 	}
 
@@ -102,21 +101,21 @@ public class TaskListControllerTest {
 
 	@Test
 	public void shouldShowTaskLists() {
-		TaskList taskList = new TaskList("A task list");
-		taskList.setId(A_TASK_LIST_ID);
-		taskList.addTask(new Task("Task 1"));
-		taskList.addTask(new Task("Task 2"));
-		taskList.addTask(new Task("Task 3"));
+		TaskList taskList = new TaskList("A task list").setId(A_TASK_LIST_ID)
+				.addTask(new Task("Task 1"))
+				.addTask(new Task("Task 2"))
+				.addTask(new Task("Task 3"));
 
 		List<TaskList> taskLists = new ArrayList<TaskList>();
-		taskLists.add(taskList);
 		taskLists.add(taskList);
 
 		when(authenticationService.getAuthenticatedUser()).thenReturn(
 				authenticatedUser);
 		when(taskListService.findByOwner(authenticatedUser)).thenReturn(
 				taskLists);
+		
 		ModelAndView mav = controller.browse();
+		
 		assertNotNull(mav);
 		assertViewName(mav, "taskListBrowse");
 		assertModelAttributeAvailable(mav, "taskLists");

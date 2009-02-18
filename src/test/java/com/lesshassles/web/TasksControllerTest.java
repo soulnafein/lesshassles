@@ -49,14 +49,12 @@ public class TasksControllerTest {
 		request.setRequestURI(String.format("/tasklists/%d/tasks/new.htm",
 				A_TASK_LIST_ID));
 
-		taskList = new TaskList("A task list");
-		taskList.setId(A_TASK_LIST_ID);
-		taskList.addTask(new Task("Task 1"));
-		taskList.addTask(new Task("Task 2"));
-		taskList.addTask(new Task("Task 3"));
+		taskList = new TaskList("A task list").setId(A_TASK_LIST_ID)
+				.addTask(new Task("Task 1"))
+				.addTask(new Task("Task 2"))
+				.addTask(new Task("Task 3"));
 
-		authenticatedUser = new User();
-		authenticatedUser.setEmail("test@test.tst");
+		authenticatedUser = new User().setEmail("test@test.tst");
 	}
 
 	@Test
@@ -109,8 +107,7 @@ public class TasksControllerTest {
 	private void taskListLoadingExpectation() {
 		when(authenticationService.getAuthenticatedUser()).thenReturn(
 				authenticatedUser);
-		when(
-				taskListService.findByIdAndOwner(A_TASK_LIST_ID,
+		when(taskListService.findByIdAndOwner(A_TASK_LIST_ID,
 						authenticatedUser)).thenReturn(taskList);
 	}
 }

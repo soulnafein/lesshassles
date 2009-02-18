@@ -12,9 +12,7 @@ import org.hibernate.validator.Pattern;
 @Entity
 public class Task {
 
-	public Task() {
-
-	}
+	Task() {}
 
 	public Task(String description) {
 		this.description = description;
@@ -24,38 +22,42 @@ public class Task {
 	@GeneratedValue
 	private Integer id;
 
+	@NotNull
+	@Pattern(regex = "([a-zA-Z0-9.\\(\\)\\-']+\\s)*[a-zA-Z0-9.\\(\\)\\-']+")
+	private String description;
+	
+	@ManyToOne
+	@JoinColumn(name = "taskListId", nullable = false)
+	private TaskList taskList;
+
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public Task setId(Integer id) {
 		this.id = id;
+		return this;
 	}
-
-	@Pattern(regex = "([a-zA-Z0-9.\\(\\)\\-']+\\s)*[a-zA-Z0-9.\\(\\)\\-']+")
-	@NotNull
-	private String description;
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public Task setDescription(String description) {
 		this.description = description;
+		return this;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "taskListId", nullable = false)
-	private TaskList taskList;
 
 	public TaskList getTaskList() {
 		return taskList;
 	}
 
-	public void setTaskList(TaskList taskList) {
+	public Task setTaskList(TaskList taskList) {
 		this.taskList = taskList;
+		return this;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
