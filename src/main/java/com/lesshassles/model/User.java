@@ -46,6 +46,17 @@ public class User implements UserDetails {
 	public String getPassword() {
 		return password;
 	}
+	
+	@Column(nullable=false)
+	private String fullname;
+	
+	public String getFullname() {
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
 
 	public GrantedAuthority[] getAuthorities() {
 		return new GrantedAuthority[] { new UserRole() };

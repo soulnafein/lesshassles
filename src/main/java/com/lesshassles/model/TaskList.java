@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -30,6 +31,7 @@ public class TaskList {
 	private String name;
 	
 	@ManyToOne
+	@JoinColumn(nullable=false)
 	private User owner;
 
 	@OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL)

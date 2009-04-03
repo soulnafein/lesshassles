@@ -29,6 +29,10 @@ public class Task {
 	@ManyToOne
 	@JoinColumn(name = "taskListId", nullable = false)
 	private TaskList taskList;
+	
+	@ManyToOne
+	@JoinColumn(name = "assigneeId", nullable = true) 
+	private User assignee;
 
 	public Integer getId() {
 		return id;
@@ -55,6 +59,15 @@ public class Task {
 
 	public Task setTaskList(TaskList taskList) {
 		this.taskList = taskList;
+		return this;
+	}
+	
+	public User getAssignee() {
+		return assignee;
+	}
+	
+	public Task setAssignee(User assignee) {
+		this.assignee = assignee;
 		return this;
 	}
 	

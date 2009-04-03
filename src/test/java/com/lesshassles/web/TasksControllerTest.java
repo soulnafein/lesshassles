@@ -25,34 +25,33 @@ import com.lesshassles.model.TaskService;
 import com.lesshassles.model.User;
 
 @RunWith(MockitoJUnit44Runner.class)
-public class TasksControllerTest {
-	private TasksController controller;
+public final class TasksControllerTest {
+	TasksController controller;
 	@Mock
-	private TaskListService taskListService;
+	TaskListService taskListService;
 	@Mock
-	private TaskService taskService;
+	TaskService taskService;
 	@Mock
-	private AuthenticationService authenticationService;
-	private MockHttpServletRequest request;
-	private TaskList taskList;
-	private User authenticatedUser;
-	private static final Integer A_TASK_LIST_ID = 15;
-	private static final Integer A_TASK_ID = 2;
+	AuthenticationService authenticationService;
+	MockHttpServletRequest request;
+	TaskList taskList;
+	User authenticatedUser;
+	static final Integer A_TASK_LIST_ID = 15;
+	static final Integer A_TASK_ID = 2;
 
 	@Before
 	public void setUp() {
 		controller = new TasksController(taskListService, taskService,
-				authenticationService);
+				authenticationService, null);
 
 		request = new MockHttpServletRequest();
 		request.setMethod("GET");
 		request.setRequestURI(String.format("/tasklists/%d/tasks/new.htm",
 				A_TASK_LIST_ID));
 
-		taskList = new TaskList("A task list").setId(A_TASK_LIST_ID)
-				.addTask(new Task("Task 1"))
-				.addTask(new Task("Task 2"))
-				.addTask(new Task("Task 3"));
+		taskList = new TaskList("A task list").setId(A_TASK_LIST_ID).addTask(
+				new Task("Task 1")).addTask(new Task("Task 2")).addTask(
+				new Task("Task 3"));
 
 		authenticatedUser = new User().setEmail("test@test.tst");
 	}
@@ -89,7 +88,7 @@ public class TasksControllerTest {
 	}
 
 	@Test
-	public void shouldCreateJsonForSpecifiedTask() {
+	public void shouldReturnTaskInJsonFormat() {
 		request.setRequestURI(String.format("/tasklists/%d/tasks/%d.htm",
 				A_TASK_LIST_ID, A_TASK_ID));
 		Task task = new Task("A task from DB");
@@ -104,10 +103,37 @@ public class TasksControllerTest {
 		assertEquals(task, taskInModel);
 	}
 
-	private void taskListLoadingExpectation() {
+	@Test
+	public void shouldChangeTaskAssignee() {
+		request.setRequestURI(
+				String.format("/tasklists/%d/tasks/%d-assign.htm", 
+								A_TASK_LIST_ID,
+								A_TASK_ID));
+		final User assignee = new User().setEmail("assigne@test.tst");
+		
+		String view = controller.assign(request, assignee);
+		
+		assertEquals("ajaxRequestResult", view);
+
+	}
+	
+	@Test
+	public void shouldDeassignTask() {
+		request.setRequestURI(
+				String.format("/tasklists/%d/tasks/%d-deassign.htm", 
+								A_TASK_LIST_ID,
+								A_TASK_ID));
+		
+		String view = controller.deassign(request);
+		
+		assertEquals("ajaxRequestResult", view);
+	}
+
+	void taskListLoadingExpectation() {
 		when(authenticationService.getAuthenticatedUser()).thenReturn(
 				authenticatedUser);
-		when(taskListService.findByIdAndOwner(A_TASK_LIST_ID,
+		when(
+				taskListService.findByIdAndOwner(A_TASK_LIST_ID,
 						authenticatedUser)).thenReturn(taskList);
 	}
 }

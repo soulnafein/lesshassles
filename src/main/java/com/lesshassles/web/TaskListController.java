@@ -1,6 +1,5 @@
 package com.lesshassles.web;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +15,7 @@ import com.lesshassles.model.Task;
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.User;
+import com.lesshassles.model.UserService;
 
 @Controller
 @RequestMapping("/tasklists/*.htm")
@@ -23,12 +23,15 @@ public class TaskListController {
 
 	private TaskListService taskListService;
 	private AuthenticationService authenticationService;
+	private UserService userService;
 
 	@Autowired
 	public TaskListController(TaskListService taskListService,
-			AuthenticationService authenticationService) {
+			AuthenticationService authenticationService,
+			UserService userService) {
 		this.taskListService = taskListService;
 		this.authenticationService = authenticationService;
+		this.userService = userService;
 	}
 
 	@RequestMapping(value = "new.htm", method = RequestMethod.GET)
@@ -38,13 +41,15 @@ public class TaskListController {
 
 	@RequestMapping(value = "new.htm", method = RequestMethod.POST)
 	public String submitForm(@ModelAttribute("taskList") TaskList taskList) {
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		taskList.setOwner(authenticatedUser);
 		Integer id = taskListService.save(taskList);
 		String view = String.format("redirect:/tasklists/%d.htm", id);
 		return view;
 	}
 
 	@RequestMapping(value = "*.htm")
-	public ModelAndView show(HttpServletRequest request) throws IOException {
+	public ModelAndView show(HttpServletRequest request) {
 
 		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
 				".*?(\\d*?)\\.htm", "$1"));
@@ -57,6 +62,14 @@ public class TaskListController {
 				taskList);
 		mav.addObject("task", new Task(""));
 		return mav;
+	}
+	
+	@ModelAttribute("users")
+	public List<User> userList() {
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		List<User> users = userService.findAllActiveUsers();
+		users.remove(authenticatedUser);
+		return users;
 	}
 
 	@RequestMapping(value = "browse.htm")

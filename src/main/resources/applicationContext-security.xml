@@ -17,5 +17,5 @@
 		<security:logout logout-url="/session/logout.htm" logout-success-url="/" />
 	</security:http>
 
-	<security:authentication-provider user-service-ref='userService'/>
+	<security:authentication-provider user-service-ref='userDetailsServiceHibernate'/>
 </beans>

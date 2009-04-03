@@ -1,31 +1,24 @@
 package com.lesshassles.model;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.UserDetailsService;
-import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @Transactional
-public class UserService implements UserDetailsService {
+public class UserService {
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	public User findById(Integer id) {
+		return (User)sessionFactory.getCurrentSession().get(User.class, id);
+	}
 
-	public UserDetails loadUserByUsername(String email)
-			throws UsernameNotFoundException, DataAccessException {
-		User user = (User) sessionFactory.getCurrentSession()
-							.createQuery("from User where email = :email")
-							.setString("email", email)
-							.uniqueResult();
-		if (user == null) {
-			throw new UsernameNotFoundException(String.format("User with email %s does not exist!", email));
-		}
-		
-		return user;
+	@SuppressWarnings("unchecked")
+	public List<User> findAllActiveUsers() {
+		return sessionFactory.getCurrentSession().createQuery("from User").list();
 	}
 
 }

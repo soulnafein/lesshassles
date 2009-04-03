@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class TaskListControllerTest {
 	@Before
 	public void setUp() {
 		controller = new TaskListController(taskListService,
-				authenticationService);
+				authenticationService,null);
 
 		request = new MockHttpServletRequest();
 		request.setMethod("GET");
@@ -64,16 +63,21 @@ public class TaskListControllerTest {
 		TaskList taskList = new TaskList(name);
 
 		when(taskListService.save(taskList)).thenReturn(A_TASK_LIST_ID);
+		
+		when(authenticationService.getAuthenticatedUser()).thenReturn(
+				authenticatedUser);
 
 		String view = controller.submitForm(taskList);
 
 		final String expectedView = String.format("redirect:/tasklists/%d.htm",
 				A_TASK_LIST_ID);
 		assertEquals(expectedView, view);
+		assertEquals(authenticatedUser, taskList.getOwner());
+		
 	}
 
 	@Test
-	public void shouldShowTasksListViewPage() throws IOException {
+	public void shouldShowTasksListViewPage() {
 		TaskList taskList = new TaskList("A task list");
 		taskList.setId(A_TASK_LIST_ID);
 		taskList.addTask(new Task("Task 1"));

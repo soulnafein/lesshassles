@@ -9,10 +9,14 @@
 		<title><tiles:getAsString name="title"/></title>
 		<link href="/yahoo-reset.css" rel="stylesheet" type="text/css" />
 		<link href="/css/style.css" rel="stylesheet" type="text/css" />
+		<link href="/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+		<link href="/css/jquery.tooltip.css" rel="stylesheet" type="text/css" />
 		<script src="/js/jquery.js" type="text/javascript"></script>
 		<script src="/js/jquery.validate.pack.js" type="text/javascript"></script>
 		<script src="/js/jquery.form.js" type="text/javascript"></script>
 		<script src="/js/jquery.ui.all.js" type="text/javascript"></script>
+		<script src="/js/jquery.autocomplete.js" type="text/javascript"></script>
+		<script src="/js/jquery.tooltip.js" type="text/javascript"></script>
 		<tiles:insertAttribute ignore="true" name="scripts" />
 	</head>
 	<body>
