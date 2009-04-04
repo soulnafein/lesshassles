@@ -27,5 +27,9 @@
 	<definition name="sessionNew" template="/WEB-INF/jsp/layout.jsp">
 		<put-attribute name="title" value="Lesshassles - Login" />
 		<put-attribute name="body" value="/WEB-INF/jsp/session/new.jsp" />
+	</definition>
+	<definition name="dashboard" template="/WEB-INF/jsp/layout.jsp">
+		<put-attribute name="title" value="Lesshassles - Dashboard" />
+		<put-attribute name="body" value="/WEB-INF/jsp/dashboard/show.jsp" />
 	</definition>		
 </tiles-definitions>

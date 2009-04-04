@@ -1,5 +1,7 @@
 package com.lesshassles.model;
 
+import java.util.List;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,16 @@ public class TaskService {
 	public void deassignTask(Integer taskId) {
 		Task task = findById(taskId);
 		task.setAssignee(null);
+	}
+
+	public List<Task> getTasksAssignedToUser(User loggedUser) {
+		return (List<Task>)sessionFactory.getCurrentSession()
+					.createQuery(	"select task from Task task " +
+									"join task.taskList taskList " +
+									"where task.assignee = :loggedUser " +
+									"or (task.assignee is null and taskList.owner = :loggedUser) ")
+					.setEntity("loggedUser", loggedUser)
+					.list();
 	}
 
 }
