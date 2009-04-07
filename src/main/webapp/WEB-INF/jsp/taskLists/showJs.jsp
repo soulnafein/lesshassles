@@ -100,7 +100,25 @@
 					validTaskListName: "The description you provided contains invalid characters (allowed characters: letters, digits, spaces and ().'-)"
 				}
 			}
-		})
+		});
+
+		$("#tasks input[type=checkbox]").change(function() {
+			var taskDescription = $(this).siblings("span");
+			var taskId = $(this).parent().attr("id").replace("task","");
+			taskDescription.toggleClass("completed");
+
+			var url = $("form#assignTask").attr("action");
+			url = url.replace(/tasks\/[^.]*/, "tasks/"+taskId+"-changeStatus");
+			
+			if ($(this).attr("checked") == false)  {
+				$.get(url,{status: "Open"});
+				
+			} else {
+				$.get(url,{status: "Completed"});
+			}
+			
+			
+		});
 	});
 
 	function validateForm() {

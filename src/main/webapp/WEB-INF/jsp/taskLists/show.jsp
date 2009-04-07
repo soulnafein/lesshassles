@@ -6,7 +6,7 @@
 		<c:forEach items="${taskList.tasks}" var="task">
 			<li id="task${task.id}">
 				<input type="checkbox" ${task.isCompleted ? "checked='checked'" : ""} /> 
-				${task.description}
+				<span ${task.isCompleted ? "class='completed'" : ""}>${task.description}</span>
 				<c:choose>
 					<c:when test="${task.assignee == null}">
 						<img class="assignTask" src="/images/user_go.gif" title="Assign task" />

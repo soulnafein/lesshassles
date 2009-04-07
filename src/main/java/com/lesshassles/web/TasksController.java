@@ -48,6 +48,7 @@ public class TasksController {
 		User authenticatedUser = authenticationService.getAuthenticatedUser();
 		TaskList taskList = taskListService.findByIdAndOwner(taskListId, authenticatedUser);
 		task.setTaskList(taskList);
+		task.setStatus(TaskStatus.Open);
 
 		if (taskList.getTasks().contains(task)) {
 			return "taskErrorDuplicateEntry";
@@ -100,7 +101,7 @@ public class TasksController {
 	}
 
 	@RequestMapping(value = "*-changeStatus.htm", method = RequestMethod.GET)
-	public String changeStatus(HttpServletRequest request, TaskStatus status) {
+	public String changeStatus(HttpServletRequest request, @RequestParam TaskStatus status) {
 		Integer taskId = Integer.parseInt(request.getRequestURI().replaceAll(
 				".*?\\/tasks\\/(\\d*?)-changeStatus\\.htm", "$1"));
 

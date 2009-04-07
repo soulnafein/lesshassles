@@ -8,6 +8,10 @@ body {
 	font-family: arial, verdana, helvetica, sans-serif;
 }
 
+.completed {
+	text-decoration: line-through;
+}
+
 	
 	
 	
