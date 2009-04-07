@@ -17,6 +17,17 @@ public class User implements UserDetails {
 	
 	@Email @NotNull @NotEmpty
 	private String email;
+	
+	private String password;
+	
+	@Column(nullable=false)
+	private String fullname;
+	
+	public User() {}
+	
+	public User(String email) {
+		this.email = email;
+	}
 
 	public Integer getId() {
 		return id;
@@ -35,8 +46,7 @@ public class User implements UserDetails {
 		this.email = email;
 		return this;
 	}
-
-	private String password;
+	
 
 	public User setPassword(String password) {
 		this.password = password;
@@ -47,15 +57,13 @@ public class User implements UserDetails {
 		return password;
 	}
 	
-	@Column(nullable=false)
-	private String fullname;
-	
 	public String getFullname() {
 		return fullname;
 	}
 
-	public void setFullname(String fullname) {
+	public User setFullname(String fullname) {
 		this.fullname = fullname;
+		return this;
 	}
 
 	public GrantedAuthority[] getAuthorities() {

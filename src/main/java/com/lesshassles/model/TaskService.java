@@ -38,4 +38,9 @@ public class TaskService {
 					.list();
 	}
 
+	public void changeTaskStatus(Integer taskId, TaskStatus status) {
+		Task task = findById(taskId);
+		task.setStatus(status);
+	}
+
 }

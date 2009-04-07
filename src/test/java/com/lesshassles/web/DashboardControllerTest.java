@@ -57,7 +57,7 @@ public class DashboardControllerTest {
 	@Test
 	public void shouldDisplayListOfTasksAssignedToLoggedUser() {
 	
-		User loggedUser = new User().setEmail("test@test.com");
+		User loggedUser = new User("test@test.com");
 		when(authenticationService.getAuthenticatedUser()).thenReturn(loggedUser);
 		
 		List<Task> tasksAssignedToUser = new ArrayList<Task>();

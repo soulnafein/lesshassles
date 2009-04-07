@@ -4,7 +4,9 @@
 <form id="assignTask" action="/tasklists/${taskList.id}/tasks/0-assign.htm">
 	<ul id="tasks">
 		<c:forEach items="${taskList.tasks}" var="task">
-			<li id="task${task.id}">${task.description}
+			<li id="task${task.id}">
+				<input type="checkbox" ${task.isCompleted ? "checked='checked'" : ""} /> 
+				${task.description}
 				<c:choose>
 					<c:when test="${task.assignee == null}">
 						<img class="assignTask" src="/images/user_go.gif" title="Assign task" />

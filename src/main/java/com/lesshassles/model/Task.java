@@ -1,6 +1,8 @@
 package com.lesshassles.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -16,6 +18,7 @@ public class Task {
 
 	public Task(String description) {
 		this.description = description;
+		this.status = TaskStatus.Open;
 	}
 
 	@Id
@@ -33,6 +36,10 @@ public class Task {
 	@ManyToOne
 	@JoinColumn(name = "assigneeId", nullable = true) 
 	private User assignee;
+	
+	@Enumerated
+	@Column(nullable = false)
+	private TaskStatus status;
 
 	public Integer getId() {
 		return id;
@@ -69,6 +76,19 @@ public class Task {
 	public Task setAssignee(User assignee) {
 		this.assignee = assignee;
 		return this;
+	}
+	
+	public TaskStatus getStatus() {
+		return status;
+	}
+	
+	public Task setStatus(TaskStatus status) {
+		this.status = status;
+		return this;
+	}
+	
+	public boolean getIsCompleted() {
+		return this.status == TaskStatus.Completed;
 	}
 	
 	@Override

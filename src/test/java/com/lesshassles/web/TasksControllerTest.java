@@ -3,8 +3,7 @@ package com.lesshassles.web;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 
@@ -12,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnit44Runner;
 import org.mockito.stubbing.Answer;
@@ -22,6 +22,7 @@ import com.lesshassles.model.Task;
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.TaskService;
+import com.lesshassles.model.TaskStatus;
 import com.lesshassles.model.User;
 
 @RunWith(MockitoJUnit44Runner.class)
@@ -53,7 +54,7 @@ public final class TasksControllerTest {
 				new Task("Task 1")).addTask(new Task("Task 2")).addTask(
 				new Task("Task 3"));
 
-		authenticatedUser = new User().setEmail("test@test.tst");
+		authenticatedUser = new User("test@test.tst");
 	}
 
 	@Test
@@ -109,7 +110,7 @@ public final class TasksControllerTest {
 				String.format("/tasklists/%d/tasks/%d-assign.htm", 
 								A_TASK_LIST_ID,
 								A_TASK_ID));
-		final User assignee = new User().setEmail("assigne@test.tst");
+		final User assignee = new User("assigne@test.tst");
 		
 		String view = controller.assign(request, assignee);
 		
@@ -127,6 +128,21 @@ public final class TasksControllerTest {
 		String view = controller.deassign(request);
 		
 		assertEquals("ajaxRequestResult", view);
+	}
+	
+	@Test
+	public void shouldChangeTaskStatus() {
+		request.setRequestURI(
+				String.format("/tasklists/%d/tasks/%d-changeStatus.htm",
+								A_TASK_LIST_ID,
+								A_TASK_ID));
+		
+		TaskStatus status = TaskStatus.Open;
+		String view = controller.changeStatus(request, status);
+		
+		verify(taskService).changeTaskStatus(A_TASK_ID, status);
+		assertEquals("ajaxRequestResult", view);
+								
 	}
 
 	void taskListLoadingExpectation() {

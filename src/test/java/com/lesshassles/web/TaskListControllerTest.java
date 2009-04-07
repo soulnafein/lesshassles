@@ -44,7 +44,7 @@ public class TaskListControllerTest {
 		request.setRequestURI(String
 				.format("/tasklists/%d.htm", A_TASK_LIST_ID));
 
-		authenticatedUser = new User().setEmail("test@test.tst");
+		authenticatedUser = new User("test@test.tst");
 
 	}
 

@@ -15,6 +15,7 @@ import com.lesshassles.model.Task;
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.TaskService;
+import com.lesshassles.model.TaskStatus;
 import com.lesshassles.model.User;
 import com.lesshassles.model.UserService;
 
@@ -94,6 +95,16 @@ public class TasksController {
 				".*?\\/tasks\\/(\\d*?)-deassign\\.htm", "$1"));
 
 		taskService.deassignTask(taskId);
+				
+		return "ajaxRequestResult";
+	}
+
+	@RequestMapping(value = "*-changeStatus.htm", method = RequestMethod.GET)
+	public String changeStatus(HttpServletRequest request, TaskStatus status) {
+		Integer taskId = Integer.parseInt(request.getRequestURI().replaceAll(
+				".*?\\/tasks\\/(\\d*?)-changeStatus\\.htm", "$1"));
+
+		taskService.changeTaskStatus(taskId, status);
 				
 		return "ajaxRequestResult";
 	}
