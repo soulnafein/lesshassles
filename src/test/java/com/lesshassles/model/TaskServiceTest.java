@@ -3,6 +3,7 @@ package com.lesshassles.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.ObjectNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -78,5 +79,51 @@ public class TaskServiceTest extends DatabaseTest {
 		taskService.changeTaskStatus(aTaskInDatabase.getId(), TaskStatus.Completed);
 		
 		assertEquals(TaskStatus.Completed, aTaskInDatabase.getStatus());
+	}
+	
+	@Test
+	public void shouldRetrieveOneTask() {
+		Task aTaskInDatabase = new Task("A task").setTaskList(anotherTaskList).setStatus(TaskStatus.Open);
+		populateDatabase(aTaskInDatabase);
+		
+		Task retrievedTask = taskService.findById(aTaskInDatabase.getId());
+		
+		assertEquals(aTaskInDatabase, retrievedTask);
+	}
+	
+	@Test
+	public void shouldThrowAnExceptionWhenRetrievingAnInvalidId() {
+		Integer anInvalidId = Integer.valueOf(666);
+		
+		try {
+			Task task = taskService.findById(anInvalidId);
+			// It's lazy so exception is thrown when trying to access object
+			task.toString();
+			fail();
+		} catch(ObjectNotFoundException ex) {
+		}
+	}
+	
+	@Test
+	public void shouldAssignTaskToAUser() {
+		Task aTaskInDatabase = new Task("A task").setTaskList(anotherTaskList).setStatus(TaskStatus.Open);
+		populateDatabase(aTaskInDatabase);
+		
+		taskService.assignTaskToUser(aTaskInDatabase.getId(), anotherUser);
+		
+		assertEquals(anotherUser, aTaskInDatabase.getAssignee());
+	}
+	
+	@Test
+	public void shouldDeassignTask() {
+		Task aTaskInDatabase = new Task("A task")
+					.setTaskList(anotherTaskList)
+					.setStatus(TaskStatus.Open)
+					.setAssignee(anotherUser);
+		populateDatabase(aTaskInDatabase);
+		
+		taskService.deassignTask(aTaskInDatabase.getId());
+		
+		assertNull(aTaskInDatabase.getAssignee());
 	}
 }

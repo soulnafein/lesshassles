@@ -15,7 +15,7 @@ public class TaskService {
 	private SessionFactory sessionFactory;
 
 	public Task findById(Integer id) {
-		return (Task) sessionFactory.getCurrentSession().get(Task.class, id);
+		return (Task) sessionFactory.getCurrentSession().load(Task.class, id);
 	}
 	
 	public void assignTaskToUser(Integer taskId, User assignee) {
