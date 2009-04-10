@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:applicationContext-hibernate.xml"})
 @Transactional
-public class DatabaseTest {
+public class DatabaseTestSupport {
 	
 	@Autowired
 	private SessionFactory sessionFactory;

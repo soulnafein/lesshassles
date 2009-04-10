@@ -156,19 +156,6 @@
 		<finalName>lesshassles</finalName>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<systemProperties>
-						<property>
-							<name>concordion.output.dir</name>
-							<value>target/concordion</value>
-						</property>
-					</systemProperties>
-				</configuration>
-			</plugin>
-
-			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.5</source>
@@ -216,7 +203,6 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-
 		</plugins>
 	</build>
 	<pluginRepositories>

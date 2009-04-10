@@ -13,9 +13,9 @@ import com.lesshassles.model.Task;
 import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskService;
 import com.lesshassles.model.User;
-import com.lesshassles.util.DatabaseTest;
+import com.lesshassles.util.DatabaseTestSupport;
 
-public class TaskServiceTest extends DatabaseTest {
+public class TaskServiceTest extends DatabaseTestSupport {
 	@Autowired
 	TaskService taskService;
 	

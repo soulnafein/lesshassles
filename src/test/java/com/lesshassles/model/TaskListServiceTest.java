@@ -1,33 +1,27 @@
 package com.lesshassles.model;
 
-import static org.mockito.Mockito.verify;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnit44Runner;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.lesshassles.persistence.TaskListDAO;
+import com.lesshassles.util.DatabaseTestSupport;
 
-@RunWith(MockitoJUnit44Runner.class)
-public class TaskListServiceTest {
-	private TaskListService taskListService;
-	@Mock
-	private TaskListDAO taskListDAO;
-
+public class TaskListServiceTest extends DatabaseTestSupport {
+	
+	@Autowired
+	TaskListService taskListService;
+	
 	@Before
 	public void setUp() {
-		taskListService = new TaskListService();
-		taskListService.setTaskListDAO(taskListDAO);
 	}
 
 	@Test
 	public void shouldTrimAndRemoveDuplicatedWhitespacesFromNameWhenSavingValidTaskList() {
 		String validName = "  abcAbc 1234().   santo's    ";
-		TaskList taskList = new TaskList(validName);
+		User aUser = new User("anemail@test.tst").setFullname("A user");
+		populateDatabase(aUser);
+		TaskList taskList = new TaskList(validName).setOwner(aUser);
 
 		taskListService.save(taskList);
-		verify(taskListDAO).makePersistent(taskList);
 	}
 }
