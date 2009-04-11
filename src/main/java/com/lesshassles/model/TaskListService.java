@@ -4,17 +4,16 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.lesshassles.persistence.TaskListDAO;
 
 @Service
 @Transactional
 public class TaskListService {
 	@Autowired
-	TaskListDAO taskListDAO;
+	private SessionFactory sessionFactory;
 
 	public Integer save(TaskList taskList) {
 		if (taskList == null)
@@ -24,30 +23,32 @@ public class TaskListService {
 
 		taskList.setName(removeDuplicateWhitespacesAndTrim(taskList.getName()));
 
-		return (Integer) taskListDAO.makePersistent(taskList);
+		return (Integer) sessionFactory.getCurrentSession().save(taskList);
 	}
 
 	public void update(TaskList taskList) {
-		taskListDAO.update(taskList);
+		sessionFactory.getCurrentSession().update(taskList);
 	}
 
 	public TaskList findByIdAndOwner(Integer id, User owner) {
-		return taskListDAO.findByIdAndOwner(id, owner);
+		return (TaskList) sessionFactory.getCurrentSession()
+			.createQuery("from TaskList where id = :id and owner = :owner")
+			.setInteger("id", id)
+			.setEntity("owner", owner)
+			.uniqueResult();
 	}
 
-	public void setTaskListDAO(TaskListDAO taskListDAO) {
-		this.taskListDAO = taskListDAO;
+	public List<TaskList> findByOwner(User owner) {
+		return sessionFactory.getCurrentSession().createQuery("from TaskList where owner = :owner")
+			.setEntity("owner", owner)
+			.list();
 	}
-
+	
 	private String removeDuplicateWhitespacesAndTrim(String name) {
 		String patternStr = "\\s+";
 		String replaceStr = " ";
 		Pattern pattern = Pattern.compile(patternStr);
 		Matcher matcher = pattern.matcher(name);
 		return matcher.replaceAll(replaceStr).trim();
-	}
-
-	public List<TaskList> findByOwner(User owner) {
-		return taskListDAO.findByOwner(owner);
 	}
 }

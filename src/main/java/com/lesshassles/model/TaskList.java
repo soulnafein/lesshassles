@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.validator.Pattern;
 
+import com.lesshassles.model.exceptions.DuplicateObjectException;
+
 @Entity
 public class TaskList {
 	
@@ -66,7 +68,9 @@ public class TaskList {
 
 	public TaskList addTask(Task task) {
 		task.setTaskList(this);
-		tasks.add(task);
+		if (!tasks.add(task)) {
+			throw new DuplicateObjectException();
+		}
 		return this;
 	}
 

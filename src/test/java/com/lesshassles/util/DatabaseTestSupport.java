@@ -1,5 +1,6 @@
 package com.lesshassles.util;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import org.hibernate.SessionFactory;
@@ -31,5 +32,12 @@ public class DatabaseTestSupport {
 		sessionFactory.getCurrentSession().flush();
 	}
 	
+	public Object retrieve(Class clazz, Serializable identifier) {
+		return sessionFactory.getCurrentSession().get(clazz, identifier);
+	}
+	
+	public void flush() {
+		sessionFactory.getCurrentSession().flush();
+	}
 	
 }

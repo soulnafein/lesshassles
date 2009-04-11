@@ -18,6 +18,7 @@ import com.lesshassles.model.TaskService;
 import com.lesshassles.model.TaskStatus;
 import com.lesshassles.model.User;
 import com.lesshassles.model.UserService;
+import com.lesshassles.model.exceptions.DuplicateObjectException;
 
 @Controller
 @RequestMapping("/tasklists/*/tasks/*.htm")
@@ -46,16 +47,13 @@ public class TasksController {
 				.replaceAll(".*?\\/tasklists\\/(\\d*?)\\/.*", "$1"));
 		
 		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		
 		TaskList taskList = taskListService.findByIdAndOwner(taskListId, authenticatedUser);
-		task.setTaskList(taskList);
-		task.setStatus(TaskStatus.Open);
-
-		if (taskList.getTasks().contains(task)) {
+		try {
+			taskList.addTask(task);
+		} catch(DuplicateObjectException ex) {
 			return "taskErrorDuplicateEntry";
 		}
-
-		taskList.addTask(task);
-
 		taskListService.update(taskList);
 
 		return String.format("redirect:/tasklists/%d/tasks/%d.htm", taskList

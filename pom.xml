@@ -150,8 +150,12 @@
 			<version>2.0.4</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>emma</groupId>
+			<artifactId>emma</artifactId>
+			<version>2.0.5312</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<finalName>lesshassles</finalName>
 		<plugins>
@@ -185,6 +189,22 @@
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>emma</mainClass>
+					<commandlineArgs>instr -verbose -m overwrite -ip target/classes -outfile target/coverage.em</commandlineArgs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
 				<version>2.1</version>
 				<configuration>
@@ -203,6 +223,18 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemProperties>
+						<property>
+							<name>emma.coverage.out.file</name>
+							<value>target/coverage.ec</value>
+						</property>
+					</systemProperties>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<pluginRepositories>
@@ -213,11 +245,7 @@
 	</pluginRepositories>
 	<reporting>
 		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
@@ -234,8 +262,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>dashboard-maven-plugin</artifactId>
 				<version>1.0.0-beta-1</version>
-			</plugin>
-
+			</plugin>-->
 		</plugins>
 	</reporting>
 </project>

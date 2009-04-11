@@ -14,7 +14,10 @@ import org.hibernate.validator.Pattern;
 @Entity
 public class Task {
 
-	Task() {}
+	Task() {
+		this.description = "New Task";
+		this.status = TaskStatus.Open;
+	}
 
 	public Task(String description) {
 		this.description = description;
@@ -54,12 +57,6 @@ public class Task {
 		return description;
 	}
 
-	public Task setDescription(String description) {
-		this.description = description;
-		return this;
-	}
-
-
 	public TaskList getTaskList() {
 		return taskList;
 	}
@@ -85,10 +82,6 @@ public class Task {
 	public Task setStatus(TaskStatus status) {
 		this.status = status;
 		return this;
-	}
-	
-	public boolean getIsCompleted() {
-		return this.status == TaskStatus.Completed;
 	}
 	
 	@Override
