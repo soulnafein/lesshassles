@@ -14,7 +14,7 @@ import org.hibernate.validator.Pattern;
 @Entity
 public class Task {
 
-	Task() {
+	public Task() {
 	}
 
 	public Task(String description) {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,8 +44,6 @@ public class TasksController {
 	@RequestMapping(value = "new.htm", method = RequestMethod.POST)
 	public String submitForm(Task task, HttpServletRequest request) {
 
-		task.setStatus(TaskStatus.Open);
-		
 		Integer taskListId = Integer.parseInt(request.getRequestURI()
 				.replaceAll(".*?\\/tasklists\\/(\\d*?)\\/.*", "$1"));
 		

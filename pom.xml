@@ -189,22 +189,6 @@
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>emma</mainClass>
-					<commandlineArgs>instr -verbose -m overwrite -ip target/classes -outfile target/coverage.em</commandlineArgs>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
 				<version>2.1</version>
 				<configuration>
