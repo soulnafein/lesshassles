@@ -10,67 +10,14 @@
 	         beforeSubmit: validateForm
 	    });
 
-		var users = [
-		     		<c:forEach items="${users}" var="user">
-		     			{id:"${user.id}",fullname:"${user.fullname}"},
-		     		</c:forEach>
-		     		{id:"0",fullname:""}];
-
 		$('img.assignTask').tooltip({
 			showURL:false
 		});
 	    
 		$('img.assignTask').click(function () {
-			$(this).after($('#searchUser').remove());
-			$('#searchUser').show();
-			$('#searchUser #cancel').click(function() {
-				$(this).parent().hide();
-			})
-			$("#searchUser #searchBox").autocomplete(users, {
-				minChars: 0,
-				width: 310,
-				matchContains: true,
-				autoFill: false,
-				mustMatch: true,
-				formatItem: function(row, i, max) {
-					return row.fullname;
-				},
-				formatMatch: function(row, i, max) {
-					return row.fullname;
-				},
-				formatResult: function(row) {
-					return row.fullname;
-				}
-			});
-
-			$("#searchUser #searchBox").result(function(event, user, formatted) {
-				$("#searchUser #assignee").val(user.id);
-			});
-
-			$('#assignTask').submit(function() {
-				var options = 	{ 
-						dataType:  'json', 
-					   	success:   processAssignTask,
-					   	clearForm: false,
-					   	error: 	processServerSideError
-				};
-				var action = "assign";
-				if ($("#searchUser #searchBox").val() == "") {
-					action = "deassign";	
-					options.success = processDeassignTask;	
-				}
-
-				var oldAction = $(this).attr("action");
-				var taskId = $("#searchUser").parent().attr("id").replace("task","");
-				var newAction = oldAction.replace(/tasks\/(\d)+-[^\.]*/, "tasks/"+taskId+"-"+action);
-				$(this).attr("action", newAction);
-
-				
-
-				$(this).ajaxSubmit(options);
-
-		        return false;
-		    });
+			$(this).after($('#assignTask').remove());
+			$('#assignTask').show();
+			initAssignTaskWidget();
 		});	
 		
 	    $('a#showAddTaskForm').click(function() {
@@ -141,24 +88,82 @@
 
 	function processAssignTask(data) {
 		var fullname = $("#searchUser #searchBox").val();
-		$("div#searchUser").siblings("img.assignTask")
+		$("#assignTask").siblings("img.assignTask")
 					.attr("src", "/images/user_gray.gif")
 					.attr("alt", "Assigned to " + fullname)
 					.tooltip({
 						showURL:false
 					});
 
-		$("div#searchUser #cancel").click();
+		$("#assignTask #cancel").click();
 	}
 
 	function processDeassignTask(data) {
-		$("div#searchUser").siblings("img.assignTask")
+		$("#assignTask").siblings("img.assignTask")
 					.attr("src", "/images/user_go.gif")
 					.attr("alt", "Assign task")
 					.tooltip({
 						showURL:false
 					});
 
-		$("div#searchUser #cancel").click();
+		$("#assignTask #cancel").click();
+	}
+
+	function initAssignTaskWidget() {
+		$('#assignTask #cancel').click(function() {
+			$(this).parent().hide();
+		});
+
+		var users = [
+			     		<c:forEach items="${users}" var="user">
+			     			{id:"${user.id}",fullname:"${user.fullname}"},
+			     		</c:forEach>
+			     		{id:"0",fullname:""}];
+ 		
+		$("#assignTask #searchBox").autocomplete(users, {
+			minChars: 0,
+			width: 310,
+			matchContains: true,
+			autoFill: false,
+			mustMatch: true,
+			formatItem: function(row, i, max) {
+				return row.fullname;
+			},
+			formatMatch: function(row, i, max) {
+				return row.fullname;
+			},
+			formatResult: function(row) {
+				return row.fullname;
+			}
+		});
+
+		$("#assignTask #searchBox").result(function(event, user, formatted) {
+			$("#assignTask #assignee").val(user.id);
+		});
+
+		$('#assignTask').submit(function() {
+			var options = 	{ 
+					dataType:  'json', 
+				   	success:   processAssignTask,
+				   	clearForm: false,
+				   	error: 	processServerSideError
+			};
+			var action = "assign";
+			if ($("#assignTask #searchBox").val() == "") {
+				action = "deassign";	
+				options.success = processDeassignTask;	
+			}
+
+			var oldAction = $(this).attr("action");
+			var taskId = $("#assignTask").parent().attr("id").replace("task","");
+			var newAction = oldAction.replace(/tasks\/(\d)+-[^\.]*/, "tasks/"+taskId+"-"+action);
+			$(this).attr("action", newAction);
+
+			
+
+			$(this).ajaxSubmit(options);
+
+	        return false;
+	    });
 	}
 </script> 

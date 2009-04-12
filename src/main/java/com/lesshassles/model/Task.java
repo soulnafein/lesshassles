@@ -15,8 +15,6 @@ import org.hibernate.validator.Pattern;
 public class Task {
 
 	Task() {
-		this.description = "New Task";
-		this.status = TaskStatus.Open;
 	}
 
 	public Task(String description) {

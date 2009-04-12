@@ -43,6 +43,8 @@ public class TasksController {
 	@RequestMapping(value = "new.htm", method = RequestMethod.POST)
 	public String submitForm(Task task, HttpServletRequest request) {
 
+		task.setStatus(TaskStatus.Open);
+		
 		Integer taskListId = Integer.parseInt(request.getRequestURI()
 				.replaceAll(".*?\\/tasklists\\/(\\d*?)\\/.*", "$1"));
 		
