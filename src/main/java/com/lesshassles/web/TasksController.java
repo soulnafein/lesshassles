@@ -71,7 +71,7 @@ public class TasksController {
 
 		Task task = taskService.findById(taskId);
 
-		return new ModelAndView("taskShowJson", "task", task);
+		return new ModelAndView("taskShow", "task", task);
 
 	}
 	
