@@ -15,6 +15,8 @@ import org.hibernate.validator.Pattern;
 public class Task {
 
 	public Task() {
+		this.description = "New task";
+		this.status = TaskStatus.Open;
 	}
 
 	public Task(String description) {
@@ -54,7 +56,12 @@ public class Task {
 	public String getDescription() {
 		return description;
 	}
-
+	
+	public Task setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+ 
 	public TaskList getTaskList() {
 		return taskList;
 	}

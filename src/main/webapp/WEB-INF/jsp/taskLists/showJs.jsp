@@ -1,94 +1,26 @@
 <%@ include file="/WEB-INF/jsp/includes.jspf" %>
 
-<script type="text/javascript"> 
-	$(document).ready(function() {
-		// Tasklist update 
-		$("#taskListName").dblclick(function() {
-			$(this).hide();
-			$("form#updateTaskList").show();
-		});
+<script type="text/javascript">
+	function processServerSideError() {
+		alert("A technical problem occured. Please try later or contact the Administrator");
+	}
 
+	$(document).ready(function() {
 	    $.validator.addMethod('validTaskDescription', function (value) { 
 		    return /^[a-zA-Z0-9.'\(\)\-\s]+$/.test(value); 
 		}, 'Please enter a valid task name.');
 
-	    $("form#updateTaskList").validate({
-			rules: {
-				taskListName: {
-					required: true,
-					validTaskDescription: true
-				}
-			},
-			messages: {
-				taskListName: {
-					required: "Please enter a valid name for your task list.",
-					validTaskDescription: "The name you provided contains invalid characters (allowed characters: letters, digits, spaces and ().'-)"
-				}
-			}
-		});
-
-		$("form#updateTaskList").ajaxForm({
-			success: function(data) {
-						var taskListName = $("form#updateTaskList input[name='taskListName']").val();
-						$("#taskListName").text(taskListName);
-						$("form#updateTaskList a#cancel").click();
-					 },
-			error: processServerSideError,
-			beforeSubmit: function() {
-						 	return $("form#updateTaskList").valid();
-					 	  }
-		});
-
-		$("form#updateTaskList a#cancel").click(function() {
-			$("#taskListName").show();
-			$("form#updateTaskList").hide();
-			$("form#updateTaskList input[name='taskListName']").val($("#taskListName").text());
-		});
-
-		// ==============================
-	    $('#task').ajaxForm({ 
-	    	 dataType:  'json', 
-	         success:   processAddTaskForm,
-	         clearForm: true,
-	         error: 	processServerSideError,
-	         beforeSubmit: validateForm
-	    });
-
-		$('img.assignTask').tooltip({
-			showURL:false
-		});
-	    
-		$('img.assignTask').click(function () {
-			$(this).after($('#assignTask').remove());
-			$('#assignTask').show();
-			initAssignTaskWidget();
-		});	
+		initTasklistUpdateWidget();
+				
+		initAssignTaskWidget();
 		
-	    $('a#showAddTaskForm').click(function() {
-	    	$(this).hide();
-	    	$('form#task').show(2);
-	    });
-	    
-	    $('a#hideAddTaskForm').click(function() {
-	    	$('a#showAddTaskForm').show();
-	    	$('form#task').hide(2);
-	    });
-	    
-	    $("#task").validate({
-			rules: {
-				description: {
-					required: true,
-					validTaskDescription: true
-				}
-			},
-			messages: {
-				description: {
-					required: "Please enter a description for your task.",
-					validTaskListName: "The description you provided contains invalid characters (allowed characters: letters, digits, spaces and ().'-)"
-				}
-			}
-		});
+		initTaskAddWidget();
 
+		initTaskStatusChangeWidget();
+		
+	});
+
+	function initTaskStatusChangeWidget() {
 		$("#tasks input[type=checkbox]").change(function() {
 			var taskDescription = $(this).siblings("span");
 			var taskId = $(this).parent().attr("id").replace("task","");
@@ -104,53 +36,73 @@
 				$.get(url,{status: "Completed"});
 			}
 			
-			
 		});
-	});
-
-	function validateForm() {
-		return $("#task").valid();
 	}
 	
-	function processServerSideError() {
-		alert("A technical problem occured. Please try later or contact the Administrator");
-	}
-	
-	function processAddTaskForm(data) {
-		if (data.error) {
-			alert(data.error.message);
-		}
+	function initTasklistUpdateWidget() {
+		var form = "form#updateTaskList";
+		var textbox = form + " input[name='taskListName']";
+		var taskListTitle = "h1#taskListName";
+		var cancelLink = form + " ._cancel"; 
 		
-	    $('#tasks').append("<li>" + data.task.description + "</li>");
-	    $('#tasks').children("li:last").effect("highlight", {}, 1000);
-	    $('a#hideAddTaskForm').click();
-	}
+		// Tasklist update 
+		$("#taskListName").dblclick(function() {
+			$(this).hide();
+			$(form).show();
+		});
 
-	function processAssignTask(data) {
-		var fullname = $("#searchUser #searchBox").val();
-		$("#assignTask").siblings("img.assignTask")
-					.attr("src", "/images/user_gray.gif")
-					.attr("alt", "Assigned to " + fullname)
-					.tooltip({
-						showURL:false
-					});
+	    $(form).validate({
+			rules: {
+				taskListName: {
+					required: true,
+					validTaskDescription: true
+				}
+			},
+			messages: {
+				taskListName: {
+					required: "Please enter a valid name for your task list.",
+					validTaskDescription: "The name you provided contains invalid characters (allowed characters: letters, digits, spaces and ().'-)"
+				}
+			}
+		});
 
-		$("#assignTask #cancel").click();
-	}
+		$(form).ajaxForm({
+			success: function(data) {
+						var taskListName = $(textbox).val();
+						$(taskListTitle).text(taskListName);
+						$(cancelLink).click();
+					 },
+			error: processServerSideError,
+			beforeSubmit: function() {
+						 	return $(form).valid();
+					 	  }
+		});
 
-	function processDeassignTask(data) {
-		$("#assignTask").siblings("img.assignTask")
-					.attr("src", "/images/user_go.gif")
-					.attr("alt", "Assign task")
-					.tooltip({
-						showURL:false
-					});
-
-		$("#assignTask #cancel").click();
+		$(cancelLink).click(function() {
+			$(taskListTitle).show();
+			$(form).hide();
+			$(textbox).val($(taskListTitle).text());
+		});		
 	}
 
 	function initAssignTaskWidget() {
-		$('#assignTask #cancel').click(function() {
+		var form = "form#assignTask";
+		var textbox = form + " #searchBox"; 
+		var assignTaskButton = "img.assignTask";
+		var cancelButton =  form + " ._cancel";
+		var assignee = form + " #assignee";  
+		
+		$(assignTaskButton).tooltip({
+			showURL:false
+		});
+
+		$(assignTaskButton).click(function () {
+			$(this).after($(form).remove());
+			$(form).show();
+			initAssignTaskWidget();
+		});	
+		
+		$(cancelButton).click(function() {
 			$(this).parent().hide();
 		});
 
@@ -160,7 +112,7 @@
 			     		</c:forEach>
 			     		{id:"0",fullname:""}];
  		
-		$("#assignTask #searchBox").autocomplete(users, {
+		$(textbox).autocomplete(users, {
 			minChars: 0,
 			width: 310,
 			matchContains: true,
@@ -177,11 +129,11 @@
 			}
 		});
 
-		$("#assignTask #searchBox").result(function(event, user, formatted) {
-			$("#assignTask #assignee").val(user.id);
+		$(textbox).result(function(event, user, formatted) {
+			$(assignee).val(user.id);
 		});
 
-		$('#assignTask').submit(function() {
+		$(form).submit(function() {
 			var options = 	{ 
 					dataType:  'json', 
 				   	success:   processAssignTask,
@@ -189,21 +141,96 @@
 				   	error: 	processServerSideError
 			};
 			var action = "assign";
-			if ($("#assignTask #searchBox").val() == "") {
+			if ($(textbox).val() == "") {
 				action = "deassign";	
 				options.success = processDeassignTask;	
 			}
 
 			var oldAction = $(this).attr("action");
-			var taskId = $("#assignTask").parent().attr("id").replace("task","");
+			var taskId = $(form).parent().attr("id").replace("task","");
 			var newAction = oldAction.replace(/tasks\/(\d)+-[^\.]*/, "tasks/"+taskId+"-"+action);
 			$(this).attr("action", newAction);
-
-			
 
 			$(this).ajaxSubmit(options);
 
 	        return false;
 	    });
+
+		function processAssignTask(data) {
+			var fullname = $(textbox).val();
+			$(form).siblings(assignTaskButton)
+						.attr("src", "/images/user_gray.gif")
+						.attr("alt", "Assigned to " + fullname)
+						.tooltip({
+							showURL:false
+						});
+
+			$(cancelButton).click();
+		}
+
+		function processDeassignTask(data) {
+			$(form).siblings(assignTaskButton)
+						.attr("src", "/images/user_go.gif")
+						.attr("alt", "Assign task")
+						.tooltip({
+							showURL:false
+						});
+
+			$(cancelButton).click();
+		}
 	}
+
+	function initTaskAddWidget() {
+		var form = "form#task";
+		var taskList = "#tasks";
+		var addTaskLink = "a#showAddTaskForm";
+		var cancelLink = "a#hideAddTaskForm"; 
+		 
+	    $(addTaskLink).click(function() {
+	    	$(this).hide();
+	    	$(form).show(2);
+	    });
+
+	    $(form).ajaxForm({ 
+	    	 dataType:  'json', 
+	         success:   processAddTaskForm,
+	         clearForm: true,
+	         error: 	processServerSideError,
+	         beforeSubmit: this.validateForm
+	    });
+	    
+	    $(cancelLink).click(function() {
+	    	$(addTaskLink).show();
+	    	$(form).hide(2);
+	    });
+	    
+	    $(form).validate({
+			rules: {
+				description: {
+					required: true,
+					validTaskDescription: true
+				}
+			},
+			messages: {
+				description: {
+					required: "Please enter a description for your task.",
+					validTaskListName: "The description you provided contains invalid characters (allowed characters: letters, digits, spaces and ().'-)"
+				}
+			}
+		});
+
+		function validateForm() {
+			return $(taskList).valid();
+		}
+
+		function processAddTaskForm(data) {
+			if (data.error) {
+				alert(data.error.message);
+			}
+			
+		    $(taskList).append("<li>" + data.task.description + "</li>");
+		    $(taskList).children("li:last").effect("highlight", {}, 1000);
+		    $(cancelLink).click();
+		}
+	}	
 </script> 

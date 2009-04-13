@@ -5,7 +5,7 @@
 <form id="updateTaskList" action="/tasklists/${taskList.id}-edit.htm" style="display:none">
 	<input type="text"  name="taskListName" value="${taskList.name}" />
 	<input type="submit" value="Save changes" />
-	<a id="cancel" href="#">cancel</a>
+	<a class="_cancel" href="#">cancel</a>
 </form>
 <ul id="tasks">
 	<c:forEach items="${taskList.tasks}" var="task">
@@ -26,11 +26,11 @@
 <form id="assignTask" action="/tasklists/${taskList.id}/tasks/0-assign.htm" style="display:none">
 	<input id="searchBox" type="text" value="" />
 	<input type="submit" value="Assign" />
-	<input id="cancel" type="button" value="Cancel" />
+	<input class="_cancel" type="button" value="Cancel" />
 	<input id="assignee" name="assignee" type="hidden" value="" />
 </form>
-<a id="showAddTaskForm" href="#">Add another task</a>
 
+<a id="showAddTaskForm" href="#">Add another task</a>
 <form:form modelAttribute="task" action="/tasklists/${taskList.id}/tasks/new.htm" cssStyle="display:none">
 	<p>
 		<form:input path="description" />
