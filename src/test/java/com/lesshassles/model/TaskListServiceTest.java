@@ -104,4 +104,16 @@ public class TaskListServiceTest extends DatabaseTestSupport {
 		
 		assertEquals(0, taskLists.size());
 	}
+	
+	@Test
+	public void shouldDeleteTaskList() {
+		TaskList taskList = new TaskList("A tasklist").setOwner(aUser);
+		populateDatabase(taskList);		
+		TaskList taskListLoadedFromDatabase = (TaskList)retrieve(TaskList.class, taskList.getId());
+		
+		taskListService.delete(taskListLoadedFromDatabase);
+		flush();
+		
+		assertNull(retrieve(TaskList.class, taskList.getId()));
+	}
 }

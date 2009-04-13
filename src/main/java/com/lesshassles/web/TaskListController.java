@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -94,5 +95,19 @@ public class TaskListController {
 		taskListService.update(taskList);
 
 		return "ajaxRequestResult";
+	}
+
+	@RequestMapping(value = "*-delete.htm")
+	public String deleteTaskList(HttpServletRequest request) {
+		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
+				".*?(\\d*?)-delete\\.htm", "$1"));
+
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		TaskList taskList = taskListService.findByIdAndOwner(id,
+				authenticatedUser);
+		
+		taskListService.delete(taskList);
+
+		return "redirect:/tasklists/browse.htm";
 	}
 }

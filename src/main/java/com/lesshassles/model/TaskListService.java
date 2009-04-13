@@ -51,4 +51,8 @@ public class TaskListService {
 		Matcher matcher = pattern.matcher(name);
 		return matcher.replaceAll(replaceStr).trim();
 	}
+
+	public void delete(TaskList taskList) {
+		sessionFactory.getCurrentSession().delete(taskList);
+	}
 }

@@ -4,7 +4,12 @@
 <a href="/tasklists/new.htm">Create a new task list</a>
 <ul id="taskLists">
 	<c:forEach items="${taskLists}" var="taskList">
-		<li><a href="/tasklists/${taskList.id}.htm">${taskList.name}</a></li>	
+		<li>
+			<form action="/tasklists/${taskList.id}-delete.htm" method="get">
+				<a href="/tasklists/${taskList.id}.htm">${taskList.name}</a>
+				<input type="image" src="/images/cross.gif" title="Delete" />
+			</form>
+		</li>	
 	</c:forEach>
 </ul>
 

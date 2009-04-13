@@ -149,5 +149,26 @@ public class TaskListControllerTest {
 		assertModelAttributeAvailable(mav, "taskLists");
 	}
 	
-	
+	@Test
+	public void shouldDeleteATaskListAndRedirectToTaskListsBrowsePage() {
+		TaskList taskList = new TaskList("A task list");
+		taskList.setId(A_TASK_LIST_ID);
+		taskList.addTask(new Task("Task 1"));
+		taskList.addTask(new Task("Task 2"));
+		taskList.addTask(new Task("Task 3"));
+		
+		request.setRequestURI(String
+				.format("/tasklists/%d-delete.htm", A_TASK_LIST_ID));
+
+		when(authenticationService.getAuthenticatedUser()).thenReturn(
+				authenticatedUser);
+		when(
+				taskListService.findByIdAndOwner(A_TASK_LIST_ID,
+						authenticatedUser)).thenReturn(taskList);
+		
+		String view = controller.deleteTaskList(request);
+		
+		verify(taskListService).delete(taskList);
+		assertEquals("redirect:/tasklists/browse.htm", view);
+	}
 }
