@@ -38,6 +38,24 @@ public class TaskServiceTest extends DatabaseTestSupport {
 	}
 	
 	@Test
+	public void shouldReturnListOfTasksAssignedToOtherUsers() {
+		List<Task> tasksInDatabase = new ArrayList<Task>();
+		tasksInDatabase.add(new Task("A task").setAssignee(loggedUser).setTaskList(anotherTaskList));
+		tasksInDatabase.add(new Task("Another task").setAssignee(null).setTaskList(loggedUserTaskList));
+		tasksInDatabase.add(new Task("A task").setAssignee(anotherUser).setTaskList(loggedUserTaskList));
+		populateDatabase(tasksInDatabase);
+		
+		List<Task> tasks = taskService.getTasksAssignedToOtherUsers(loggedUser);
+		
+		assertEquals(1, tasks.size());
+		for(Task task : tasks) {
+			assertNotNull(task.getAssignee());
+			assertFalse(loggedUser.equals(task.getAssignee()));
+			assertEquals(loggedUser, task.getTaskList().getOwner());
+		}	
+	}
+	
+	@Test
 	public void shouldReturnListOfTasksAssignedToAUser() {
 		
 		List<Task> tasksInDatabase = new ArrayList<Task>();

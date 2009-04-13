@@ -6,7 +6,6 @@ import com.lesshassles.model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,20 +17,29 @@ public class DashboardController {
 	
 	AuthenticationService authenticationService;
 	
+	TaskListService taskListService;
+	
 	@Autowired
-	public DashboardController(TaskService taskService, AuthenticationService authenticationService) {
+	public DashboardController(TaskService taskService, AuthenticationService authenticationService, TaskListService taskListService) {
 		this.taskService = taskService;
 		this.authenticationService = authenticationService;
+		this.taskListService = taskListService;
 	}
 
 	@RequestMapping(value = "index.htm")
 	public ModelAndView show() {
-		return new ModelAndView("dashboard");
-	}
-
-	@ModelAttribute("tasksAssignedToUser")
-	public List<Task> tasksAssignedToUser() {
+		ModelAndView mav = new ModelAndView("dashboard");
 		User loggedUser = authenticationService.getAuthenticatedUser();
-		return taskService.getTasksAssignedToUser(loggedUser);
+		
+		List<Task> tasksAssignedToUser = taskService.getTasksAssignedToUser(loggedUser);
+		mav.addObject("tasksAssignedToUser", tasksAssignedToUser);
+		
+		List<Task> tasksAssignedToOtherUsers = taskService.getTasksAssignedToOtherUsers(loggedUser);
+		mav.addObject("tasksAssignedToOtherUsers", tasksAssignedToOtherUsers);
+		
+		List<TaskList> taskLists = taskListService.findByOwner(loggedUser);
+		mav.addObject("taskLists", taskLists);
+		
+		return mav;
 	}
 }

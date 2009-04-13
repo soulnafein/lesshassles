@@ -43,4 +43,14 @@ public class TaskService {
 		task.setStatus(status);
 	}
 
+	public List<Task> getTasksAssignedToOtherUsers(User loggedUser) {
+		return (List<Task>)sessionFactory.getCurrentSession()
+		.createQuery(	"select task from Task task " +
+						"join task.taskList taskList " +
+						"where task.assignee <> :loggedUser " +
+						"and task.assignee is not null and taskList.owner = :loggedUser")
+		.setEntity("loggedUser", loggedUser)
+		.list();
+	}
+
 }

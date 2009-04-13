@@ -5,9 +5,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -128,29 +125,7 @@ public class TaskListControllerTest {
 	}
 
 	@Test
-	public void shouldShowTaskLists() {
-		TaskList taskList = new TaskList("A task list").setId(A_TASK_LIST_ID)
-				.addTask(new Task("Task 1"))
-				.addTask(new Task("Task 2"))
-				.addTask(new Task("Task 3"));
-
-		List<TaskList> taskLists = new ArrayList<TaskList>();
-		taskLists.add(taskList);
-
-		when(authenticationService.getAuthenticatedUser()).thenReturn(
-				authenticatedUser);
-		when(taskListService.findByOwner(authenticatedUser)).thenReturn(
-				taskLists);
-		
-		ModelAndView mav = controller.browse();
-		
-		assertNotNull(mav);
-		assertViewName(mav, "taskListBrowse");
-		assertModelAttributeAvailable(mav, "taskLists");
-	}
-	
-	@Test
-	public void shouldDeleteATaskListAndRedirectToTaskListsBrowsePage() {
+	public void shouldDeleteATaskListAndRedirectToDashboard() {
 		TaskList taskList = new TaskList("A task list");
 		taskList.setId(A_TASK_LIST_ID);
 		taskList.addTask(new Task("Task 1"));
@@ -169,6 +144,6 @@ public class TaskListControllerTest {
 		String view = controller.deleteTaskList(request);
 		
 		verify(taskListService).delete(taskList);
-		assertEquals("redirect:/tasklists/browse.htm", view);
+		assertEquals("redirect:/dashboard/index.htm", view);
 	}
 }

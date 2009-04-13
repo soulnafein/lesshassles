@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,14 +73,6 @@ public class TaskListController {
 		return users;
 	}
 
-	@RequestMapping(value = "browse.htm")
-	public ModelAndView browse() {
-		User authenticatedUser = authenticationService.getAuthenticatedUser();
-		List<TaskList> taskLists = taskListService
-				.findByOwner(authenticatedUser);
-		return new ModelAndView("taskListBrowse", "taskLists", taskLists);
-	}
-
 	@RequestMapping(value = "*-edit.htm")
 	public String updateTaskList(@RequestParam String taskListName, HttpServletRequest request) {
 		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
@@ -108,6 +99,6 @@ public class TaskListController {
 		
 		taskListService.delete(taskList);
 
-		return "redirect:/tasklists/browse.htm";
+		return "redirect:/dashboard/index.htm";
 	}
 }

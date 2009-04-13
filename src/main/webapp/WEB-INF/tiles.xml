@@ -17,10 +17,6 @@
 		<put-attribute name="body" value="/WEB-INF/jsp/taskLists/show.jsp" />
 		<put-attribute name="scripts" value="/WEB-INF/jsp/taskLists/showJs.jsp" />
 	</definition>
-	<definition name="taskListBrowse" template="/WEB-INF/jsp/layout.jsp">
-		<put-attribute name="title" value="Lesshassles - Your task lists" />
-		<put-attribute name="body" value="/WEB-INF/jsp/taskLists/browse.jsp" />
-	</definition>		
 	<definition name="taskShowJson" template="/WEB-INF/jsp/tasks/showJson.jsp" />
 	<definition name="ajaxRequestResult" template="/WEB-INF/jsp/ajaxRequestResult.jsp" />
 	<definition name="taskErrorDuplicateEntry" template="/WEB-INF/jsp/tasks/errorDuplicateEntry.jsp" />
