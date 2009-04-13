@@ -1,7 +1,51 @@
 <%@ include file="/WEB-INF/jsp/includes.jspf" %>
 
 <script type="text/javascript"> 
-	$(document).ready(function() { 
+	$(document).ready(function() {
+		// Tasklist update 
+		$("#taskListName").dblclick(function() {
+			$(this).hide();
+			$("form#updateTaskList").show();
+		});
+
+	    $.validator.addMethod('validTaskDescription', function (value) { 
+		    return /^[a-zA-Z0-9.'\(\)\-\s]+$/.test(value); 
+		}, 'Please enter a valid task name.');
+
+	    $("form#updateTaskList").validate({
+			rules: {
+				taskListName: {
+					required: true,
+					validTaskDescription: true
+				}
+			},
+			messages: {
+				taskListName: {
+					required: "Please enter a valid name for your task list.",
+					validTaskDescription: "The name you provided contains invalid characters (allowed characters: letters, digits, spaces and ().'-)"
+				}
+			}
+		});
+
+		$("form#updateTaskList").ajaxForm({
+			success: function(data) {
+						var taskListName = $("form#updateTaskList input[name='taskListName']").val();
+						$("#taskListName").text(taskListName);
+						$("form#updateTaskList a#cancel").click();
+					 },
+			error: processServerSideError,
+			beforeSubmit: function() {
+						 	return $("form#updateTaskList").valid();
+					 	  }
+		});
+
+		$("form#updateTaskList a#cancel").click(function() {
+			$("#taskListName").show();
+			$("form#updateTaskList").hide();
+			$("form#updateTaskList input[name='taskListName']").val($("#taskListName").text());
+		});
+
+		// ==============================
 	    $('#task').ajaxForm({ 
 	    	 dataType:  'json', 
 	         success:   processAddTaskForm,
@@ -29,10 +73,6 @@
 	    	$('a#showAddTaskForm').show();
 	    	$('form#task').hide(2);
 	    });
-	    
-	    $.validator.addMethod('validTaskDescription', function (value) { 
-		    return /^[a-zA-Z0-9.'\(\)\-\s]+$/.test(value); 
-		}, 'Please enter a valid task name.');
 	    
 	    $("#task").validate({
 			rules: {

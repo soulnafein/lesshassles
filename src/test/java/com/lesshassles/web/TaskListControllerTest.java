@@ -1,8 +1,7 @@
 package com.lesshassles.web;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 
@@ -58,7 +57,7 @@ public class TaskListControllerTest {
 	}
 
 	@Test
-	public void shouldSaveTaskListAndShowTaskListViewPage() {
+	public void shouldCreateTaskListAndRedirect() {
 		final String name = "My task list";
 		TaskList taskList = new TaskList(name);
 
@@ -73,7 +72,32 @@ public class TaskListControllerTest {
 				A_TASK_LIST_ID);
 		assertEquals(expectedView, view);
 		assertEquals(authenticatedUser, taskList.getOwner());
+	}
+	
+	@Test
+	public void shouldUpdateTaskListAndReturnStatusInJsonFormat() {
+		TaskList taskList = new TaskList("A task list");
+		taskList.setId(A_TASK_LIST_ID);
+		taskList.addTask(new Task("Task 1"));
+		taskList.addTask(new Task("Task 2"));
+		taskList.addTask(new Task("Task 3"));
 		
+		request.setRequestURI(String
+				.format("/tasklists/%d-edit.htm", A_TASK_LIST_ID));
+
+		when(authenticationService.getAuthenticatedUser()).thenReturn(
+				authenticatedUser);
+		when(
+				taskListService.findByIdAndOwner(A_TASK_LIST_ID,
+						authenticatedUser)).thenReturn(taskList);
+		
+		String taskListName = "A new tasklist name";
+		
+		String view = controller.updateTaskList(taskListName, request);
+		
+		verify(taskListService).update(taskList);
+		assertEquals(taskListName, taskList.getName());
+		assertEquals("ajaxRequestResult", view);
 	}
 
 	@Test
@@ -124,4 +148,6 @@ public class TaskListControllerTest {
 		assertViewName(mav, "taskListBrowse");
 		assertModelAttributeAvailable(mav, "taskLists");
 	}
+	
+	
 }

@@ -1,7 +1,12 @@
 <%@ include file="/WEB-INF/jsp/includes.jspf" %>
 <%@ page import="com.lesshassles.model.TaskStatus" %>
 
-<h1>${taskList.name}</h1>
+<h1 id="taskListName">${taskList.name}</h1>
+<form id="updateTaskList" action="/tasklists/${taskList.id}-edit.htm" style="display:none">
+	<input type="text"  name="taskListName" value="${taskList.name}" />
+	<input type="submit" value="Save changes" />
+	<a id="cancel" href="#">cancel</a>
+</form>
 <ul id="tasks">
 	<c:forEach items="${taskList.tasks}" var="task">
 		<li id="task${task.id}">
