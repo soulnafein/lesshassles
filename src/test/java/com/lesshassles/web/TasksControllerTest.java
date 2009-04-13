@@ -1,8 +1,6 @@
 package com.lesshassles.web;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
@@ -23,6 +21,7 @@ import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.TaskService;
 import com.lesshassles.model.TaskStatus;
 import com.lesshassles.model.User;
+import com.lesshassles.model.exceptions.*;
 
 @RunWith(MockitoJUnit44Runner.class)
 public final class TasksControllerTest {
@@ -77,18 +76,22 @@ public final class TasksControllerTest {
 	}
 
 	@Test
-	public void shouldReturnErrorMessageWhenTryingToAddTaskTwice() {
+	public void shouldThrowExceptionWhenTryingToAddTaskTwice() {
 		taskListLoadingExpectation();
 
 		Task task = new Task(taskList.getTasks().iterator().next()
 				.getDescription());
 
-		String view = controller.submitForm(task, request);
-		assertEquals("taskErrorDuplicateEntry", view);
+		try {
+			controller.submitForm(task, request);
+			fail();
+		} catch(DuplicateObjectException ex) {
+			
+		}
 	}
 
 	@Test
-	public void shouldReturnTaskInJsonFormat() {
+	public void shouldReturnTaskInHtmlFormat() {
 		request.setRequestURI(String.format("/tasklists/%d/tasks/%d.htm",
 				A_TASK_LIST_ID, A_TASK_ID));
 		Task task = new Task("A task from DB");
@@ -97,7 +100,7 @@ public final class TasksControllerTest {
 		ModelAndView mav = controller.show(request);
 
 		assertNotNull(mav);
-		assertViewName(mav, "taskShowJson");
+		assertViewName(mav, "taskShow");
 		assertModelAttributeAvailable(mav, "task");
 		Task taskInModel = (Task) mav.getModel().get("task");
 		assertEquals(task, taskInModel);

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +18,6 @@ import com.lesshassles.model.TaskService;
 import com.lesshassles.model.TaskStatus;
 import com.lesshassles.model.User;
 import com.lesshassles.model.UserService;
-import com.lesshassles.model.exceptions.DuplicateObjectException;
 
 @Controller
 @RequestMapping("/tasklists/*/tasks/*.htm")
@@ -50,11 +48,9 @@ public class TasksController {
 		User authenticatedUser = authenticationService.getAuthenticatedUser();
 		
 		TaskList taskList = taskListService.findByIdAndOwner(taskListId, authenticatedUser);
-		try {
-			taskList.addTask(task);
-		} catch(DuplicateObjectException ex) {
-			return "taskErrorDuplicateEntry";
-		}
+		
+		taskList.addTask(task);
+
 		taskListService.update(taskList);
 
 		return String.format("redirect:/tasklists/%d/tasks/%d.htm", taskList
@@ -70,7 +66,7 @@ public class TasksController {
 
 		Task task = taskService.findById(taskId);
 
-		return new ModelAndView("taskShowJson", "task", task);
+		return new ModelAndView("taskShow", "task", task);
 
 	}
 	

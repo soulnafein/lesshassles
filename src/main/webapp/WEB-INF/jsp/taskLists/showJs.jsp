@@ -21,12 +21,15 @@
 	});
 
 	function initTaskStatusChangeWidget() {
-		$("#tasks input[type=checkbox]").change(function() {
+		var form = "form#assignTask"; 
+		var checkbox = "#tasks input[type=checkbox]";
+		
+		$(checkbox).live("change",function() {
 			var taskDescription = $(this).siblings("span");
 			var taskId = $(this).parent().attr("id").replace("task","");
 			taskDescription.toggleClass("completed");
 
-			var url = $("form#assignTask").attr("action");
+			var url = $(form).attr("action");
 			url = url.replace(/tasks\/[^.]*/, "tasks/"+taskId+"-changeStatus");
 			
 			if ($(this).attr("checked") == false)  {
@@ -96,66 +99,68 @@
 			showURL:false
 		});
 
-		$(assignTaskButton).click(function () {
+		$(assignTaskButton).live("click",function () {
 			$(this).after($(form).remove());
 			$(form).show();
-			initAssignTaskWidget();
+			rebindFormEvents();
 		});	
+
+		function rebindFormEvents() {
+			$(cancelButton).click(function() {
+				$(this).parent().hide();
+			});
+	
+			var users = [
+				     		<c:forEach items="${users}" var="user">
+				     			{id:"${user.id}",fullname:"${user.fullname}"},
+				     		</c:forEach>
+				     		{id:"0",fullname:""}];
+	 		
+			$(textbox).autocomplete(users, {
+				minChars: 0,
+				width: 310,
+				matchContains: true,
+				autoFill: false,
+				mustMatch: true,
+				formatItem: function(row, i, max) {
+					return row.fullname;
+				},
+				formatMatch: function(row, i, max) {
+					return row.fullname;
+				},
+				formatResult: function(row) {
+					return row.fullname;
+				}
+			});
+	
+			$(textbox).result(function(event, user, formatted) {
+				$(assignee).val(user.id);
+			});
+	
+			$(form).submit(function() {
+				var options = 	{ 
+						dataType:  'json', 
+					   	success:   processAssignTask,
+					   	clearForm: false,
+					   	error: 	processServerSideError
+				};
+				var action = "assign";
+				if ($(textbox).val() == "") {
+					action = "deassign";	
+					options.success = processDeassignTask;	
+				}
+	
+				var oldAction = $(this).attr("action");
+				var taskId = $(form).parent().attr("id").replace("task","");
+				var newAction = oldAction.replace(/tasks\/(\d)+-[^\.]*/, "tasks/"+taskId+"-"+action);
+				$(this).attr("action", newAction);
+	
+				$(this).ajaxSubmit(options);
+	
+		        return false;
+		    });
+		}
 		
-		$(cancelButton).click(function() {
-			$(this).parent().hide();
-		});
-
-		var users = [
-			     		<c:forEach items="${users}" var="user">
-			     			{id:"${user.id}",fullname:"${user.fullname}"},
-			     		</c:forEach>
-			     		{id:"0",fullname:""}];
- 		
-		$(textbox).autocomplete(users, {
-			minChars: 0,
-			width: 310,
-			matchContains: true,
-			autoFill: false,
-			mustMatch: true,
-			formatItem: function(row, i, max) {
-				return row.fullname;
-			},
-			formatMatch: function(row, i, max) {
-				return row.fullname;
-			},
-			formatResult: function(row) {
-				return row.fullname;
-			}
-		});
-
-		$(textbox).result(function(event, user, formatted) {
-			$(assignee).val(user.id);
-		});
-
-		$(form).submit(function() {
-			var options = 	{ 
-					dataType:  'json', 
-				   	success:   processAssignTask,
-				   	clearForm: false,
-				   	error: 	processServerSideError
-			};
-			var action = "assign";
-			if ($(textbox).val() == "") {
-				action = "deassign";	
-				options.success = processDeassignTask;	
-			}
-
-			var oldAction = $(this).attr("action");
-			var taskId = $(form).parent().attr("id").replace("task","");
-			var newAction = oldAction.replace(/tasks\/(\d)+-[^\.]*/, "tasks/"+taskId+"-"+action);
-			$(this).attr("action", newAction);
-
-			$(this).ajaxSubmit(options);
-
-	        return false;
-	    });
-
 		function processAssignTask(data) {
 			var fullname = $(textbox).val();
 			$(form).siblings(assignTaskButton)
@@ -192,7 +197,6 @@
 	    });
 
 	    $(form).ajaxForm({ 
-	    	 dataType:  'json', 
 	         success:   processAddTaskForm,
 	         clearForm: true,
 	         error: 	processServerSideError,
@@ -227,8 +231,8 @@
 			if (data.error) {
 				alert(data.error.message);
 			}
-			
-		    $(taskList).append("<li>" + data.task.description + "</li>");
+
+			$(taskList).append(data);
 		    $(taskList).children("li:last").effect("highlight", {}, 1000);
 		    $(cancelLink).click();
 		}
