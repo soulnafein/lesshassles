@@ -1,6 +1,7 @@
 package com.lesshassles.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.ObjectNotFoundException;
@@ -56,6 +57,22 @@ public class TaskServiceTest extends DatabaseTestSupport {
 	}
 	
 	@Test
+	public void shouldReturnListOfTasksAssignedToOtherUsersSortedByDeadline() {
+		Task taskWithDeadline = new Task("A task with deadline").setAssignee(anotherUser).setTaskList(loggedUserTaskList).setDeadline(new Date(2009,2,1));
+		Task taskWithNoDeadline = new Task("A task without deadline").setAssignee(anotherUser).setTaskList(loggedUserTaskList);
+		Task taskDueUrgently = new Task("A task due soon").setAssignee(anotherUser).setTaskList(loggedUserTaskList).setDeadline(new Date(2009,2,15));
+		populateDatabase(taskWithDeadline, taskWithNoDeadline, taskDueUrgently);
+		
+		List<Task> tasks = taskService.getTasksAssignedToOtherUsers(loggedUser);
+
+		assertEquals(3, tasks.size());
+		assertEquals(tasks.get(0), taskDueUrgently);
+		assertEquals(tasks.get(1), taskWithDeadline);
+		assertEquals(tasks.get(2), taskWithNoDeadline);
+			
+	}
+	
+	@Test
 	public void shouldReturnListOfTasksAssignedToAUser() {
 		
 		List<Task> tasksInDatabase = new ArrayList<Task>();
@@ -69,8 +86,22 @@ public class TaskServiceTest extends DatabaseTestSupport {
 		assertEquals(2, tasks.size());
 		for(Task task : tasks) {
 			assertEquals(loggedUser, task.getAssignee());
-		}
+		}		
+	}
+	
+	@Test
+	public void shouldReturnListOfTasksAssignedToAUserSortedByDeadline() {
+		Task taskWithDeadline = new Task("A task with deadline").setAssignee(loggedUser).setTaskList(anotherTaskList).setDeadline(new Date(2009,2,1));
+		Task taskWithNoDeadline = new Task("A task without deadline").setAssignee(loggedUser).setTaskList(anotherTaskList);
+		Task taskDueUrgently = new Task("A task due soon").setAssignee(loggedUser).setTaskList(anotherTaskList).setDeadline(new Date(2009,2,15));
+		populateDatabase(taskWithDeadline, taskWithNoDeadline, taskDueUrgently);
 		
+		List<Task> tasks = taskService.getTasksAssignedToUser(loggedUser);
+
+		assertEquals(3, tasks.size());
+		assertEquals(tasks.get(0), taskDueUrgently);
+		assertEquals(tasks.get(1), taskWithDeadline);
+		assertEquals(tasks.get(2), taskWithNoDeadline);
 	}
 	
 	@Test
@@ -144,4 +175,16 @@ public class TaskServiceTest extends DatabaseTestSupport {
 		
 		assertNull(aTaskInDatabase.getAssignee());
 	}
+	
+	@Test
+	public void shouldChangeDeadline() {
+		Task aTaskInDatabase = new Task("A task").setTaskList(anotherTaskList).setDeadline(new Date(2008,01,01));
+		populateDatabase(aTaskInDatabase);
+		
+		Date aNewDeadline = new Date(2009,02,02);
+		taskService.changeDeadline(aTaskInDatabase.getId(), aNewDeadline);
+		
+		assertEquals(aNewDeadline, aTaskInDatabase.getDeadline());
+	}
+	
 }

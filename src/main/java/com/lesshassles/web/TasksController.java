@@ -1,8 +1,13 @@
 package com.lesshassles.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -73,6 +78,8 @@ public class TasksController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 	    binder.registerCustomEditor(User.class, new UserCustomEditor(userService));
+	    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+	    binder.registerCustomEditor(Date.class, new CustomDateEditor(format, true));
 	}
 	
 	@RequestMapping(value = "*-assign.htm", method = RequestMethod.GET)
@@ -101,6 +108,16 @@ public class TasksController {
 				".*?\\/tasks\\/(\\d*?)-changeStatus\\.htm", "$1"));
 
 		taskService.changeTaskStatus(taskId, status);
+				
+		return "ajaxRequestResult";
+	}
+
+	@RequestMapping(value = "*-setDeadline.htm", method = RequestMethod.GET)
+	public String changeStatus(HttpServletRequest request, @RequestParam Date deadline) {
+		Integer taskId = Integer.parseInt(request.getRequestURI().replaceAll(
+				".*?\\/tasks\\/(\\d*?)-setDeadline\\.htm", "$1"));
+
+		taskService.changeDeadline(taskId, deadline);
 				
 		return "ajaxRequestResult";
 	}

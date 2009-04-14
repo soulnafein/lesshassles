@@ -1,5 +1,7 @@
 package com.lesshassles.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -44,6 +46,8 @@ public class Task {
 	@Column(nullable = false)
 	private TaskStatus status;
 
+	private Date deadline;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -89,6 +93,15 @@ public class Task {
 		return this;
 	}
 	
+	public Date getDeadline() {
+		return deadline;
+	}
+	
+	public Task setDeadline(Date deadline) {
+		this.deadline = deadline;
+		return this;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -106,4 +119,5 @@ public class Task {
 	public int hashCode() {
 		return getDescription().hashCode();
 	}
+
 }

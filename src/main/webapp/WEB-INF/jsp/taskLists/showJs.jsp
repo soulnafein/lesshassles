@@ -16,6 +16,8 @@
 		initTaskAddWidget();
 
 		initTaskStatusChangeWidget();
+
+		initSetDeadlineWidget();
 		
 	});
 	

@@ -1,5 +1,6 @@
 package com.lesshassles.model;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -33,7 +34,8 @@ public class TaskService {
 					.createQuery(	"select task from Task task " +
 									"join task.taskList taskList " +
 									"where task.assignee = :loggedUser " +
-									"or (task.assignee is null and taskList.owner = :loggedUser) ")
+									"or (task.assignee is null and taskList.owner = :loggedUser) " +
+									"order by task.deadline desc")
 					.setEntity("loggedUser", loggedUser)
 					.list();
 	}
@@ -48,9 +50,15 @@ public class TaskService {
 		.createQuery(	"select task from Task task " +
 						"join task.taskList taskList " +
 						"where task.assignee <> :loggedUser " +
-						"and task.assignee is not null and taskList.owner = :loggedUser")
+						"and task.assignee is not null and taskList.owner = :loggedUser " +
+						"order by task.deadline desc")
 		.setEntity("loggedUser", loggedUser)
 		.list();
+	}
+
+	public void changeDeadline(Integer taskId, Date deadline) {
+		Task task = findById(taskId);
+		task.setDeadline(deadline);
 	}
 
 }

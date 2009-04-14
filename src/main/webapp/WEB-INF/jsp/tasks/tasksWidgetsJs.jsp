@@ -22,7 +22,7 @@
 			} else {
 				$.get(url,{status: "Completed"});
 			}
-			
+			$(this).parent().effect("highlight", {}, 1000);
 		});
 	}
 	
@@ -107,6 +107,7 @@
 						.attr("alt", "Assigned to " + fullname);
 
 			$(cancelButton).click();
+			$(form).parent().effect("highlight", {}, 1000);
 		}
 
 		function processDeassignTask(data) {
@@ -115,5 +116,52 @@
 						.attr("alt", "Assign task");
 
 			$(cancelButton).click();
+			$(form).parent().effect("highlight", {}, 1000);
 		}
+	}
+	
+	function initSetDeadlineWidget() {
+		var form = "form#setDeadline";
+		var textbox = form + " #datepicker"; 
+		var setDeadlineButton = "img.setDeadline";
+		var cancelLink =  form + " ._cancel";
+		
+		$(setDeadlineButton).live("click",function () {
+			$(form).appendTo($(this).parent());
+			$(form).show();
+		});	
+
+		$(textbox).datepicker({showOn: 'button', buttonImage: '/images/calendar.gif', buttonImageOnly: false, dateFormat:'dd/mm/yy'});
+		
+		$(cancelLink).click(function() {
+			$(this).parent().hide();
+		});
+
+		$(form).submit(function() {
+			
+			var options = 	{ 
+				   	clearForm: false,
+				   	success: processSubmit,
+				   	error: 	processServerSideError
+			};
+
+			var oldAction = $(this).attr("action");
+			var taskId = $(form).parent().attr("id").replace("task","");
+			var newAction = oldAction.replace(/tasks\/(\d)+-[^\.]*/, "tasks/"+taskId+"-setDeadline");
+			$(this).attr("action", newAction);
+
+			$(this).ajaxSubmit(options);
+
+	        return false;
+	    });
+	    
+	    function processSubmit(data) {
+	    	$(cancelLink).click();
+	    	var deadline = "";
+	    	if ($(textbox).val() != "") {
+	    		deadline = "Due on: " + $(textbox).val();
+	    	}
+	    	$(form).siblings(".deadline").text(deadline);
+			$(form).parent().effect("highlight", {}, 1000);   	
+	    }
 	}

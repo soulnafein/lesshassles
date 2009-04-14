@@ -11,4 +11,12 @@
 			<img class="assignTask" src="/images/user_gray.gif" title="Assigned to ${task.assignee.fullname}" />
 		</c:otherwise>
 	</c:choose>
+	<img class="setDeadline" src="/images/calendar_add.gif" title="Set or change a deadline for this task" />
+	<span class="deadline">
+	<c:choose>
+		<c:when test="${task.deadline != null}">
+			Due on: <fmt:formatDate type="date" value="${task.deadline}" />
+		</c:when>
+	</c:choose>
+	</span>
 </li>	

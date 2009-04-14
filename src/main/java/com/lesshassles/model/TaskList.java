@@ -3,6 +3,8 @@ package com.lesshassles.model;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
@@ -12,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 import org.hibernate.validator.Pattern;
 
 import com.lesshassles.model.exceptions.DuplicateObjectException;
@@ -37,7 +41,8 @@ public class TaskList {
 	private User owner;
 
 	@OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL)
-	private Set<Task> tasks = new HashSet<Task>();
+	@Sort(type=SortType.COMPARATOR, comparator=DeadlineComparator.class)
+	private SortedSet<Task> tasks = new TreeSet<Task>(new DeadlineComparator());
 
 	public Integer getId() {
 		return id;
@@ -74,8 +79,8 @@ public class TaskList {
 		return this;
 	}
 
-	public Set<Task> getTasks() {
-		return Collections.unmodifiableSet(tasks);
+	public SortedSet<Task> getTasks() {
+		return Collections.unmodifiableSortedSet(tasks);
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -143,6 +145,21 @@ public final class TasksControllerTest {
 		String view = controller.changeStatus(request, status);
 		
 		verify(taskService).changeTaskStatus(A_TASK_ID, status);
+		assertEquals("ajaxRequestResult", view);
+								
+	}
+	
+	@Test
+	public void shouldSetDeadline() {
+		request.setRequestURI(
+				String.format("/tasklists/%d/tasks/%d-setDeadline.htm",
+								A_TASK_LIST_ID,
+								A_TASK_ID));
+		
+		Date deadline = new Date(2009,2,2);
+		String view = controller.changeStatus(request, deadline);
+		
+		verify(taskService).changeDeadline(A_TASK_ID, deadline);
 		assertEquals("ajaxRequestResult", view);
 								
 	}

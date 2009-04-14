@@ -17,6 +17,11 @@
 	<input class="_cancel" type="button" value="Cancel" />
 	<input id="assignee" name="assignee" type="hidden" value="" />
 </form>
+<form id="setDeadline" action="/tasklists/${taskList.id}/tasks/0-setDeadline.htm" style="display:none">
+	<input id="datepicker" name="deadline" type="text" value="" />
+	<input type="submit" value="Confirm deadline" />
+	<a href="#" class="_cancel">cancel</a>
+</form>
 <a id="showAddTaskForm" href="#">Add another task</a>
 <form:form modelAttribute="task" action="/tasklists/${taskList.id}/tasks/new.htm" cssStyle="display:none">
 	<p>
