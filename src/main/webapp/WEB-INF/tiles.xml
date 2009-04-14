@@ -21,7 +21,7 @@
 		<put-attribute name="title" value="Lesshassles - Your task lists" />
 		<put-attribute name="body" value="/WEB-INF/jsp/taskLists/browse.jsp" />
 	</definition>		
-	<definition name="taskShow" template="/WEB-INF/jsp/tasks/show.jsp" />
+	<definition name="taskShowJson" template="/WEB-INF/jsp/tasks/showJson.jsp" />
 	<definition name="ajaxRequestResult" template="/WEB-INF/jsp/ajaxRequestResult.jsp" />
 	<definition name="taskErrorDuplicateEntry" template="/WEB-INF/jsp/tasks/errorDuplicateEntry.jsp" />
 	<definition name="sessionNew" template="/WEB-INF/jsp/layout.jsp">
