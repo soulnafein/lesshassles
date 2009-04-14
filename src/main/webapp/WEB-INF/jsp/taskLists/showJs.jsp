@@ -3,6 +3,7 @@
 <script type="text/javascript"> 
 	$(document).ready(function() { 
 	    $('#task').ajaxForm({ 
+	    	 dataType:  'json', 
 	         success:   processAddTaskForm,
 	         clearForm: true,
 	         error: 	processServerSideError,
@@ -13,7 +14,7 @@
 			showURL:false
 		});
 	    
-		$('img.assignTask').live("click",function () {
+		$('img.assignTask').click(function () {
 			$(this).after($('#assignTask').remove());
 			$('#assignTask').show();
 			initAssignTaskWidget();
@@ -48,7 +49,7 @@
 			}
 		});
 
-		$("#tasks input[type=checkbox]").live("change",function() {
+		$("#tasks input[type=checkbox]").change(function() {
 			var taskDescription = $(this).siblings("span");
 			var taskId = $(this).parent().attr("id").replace("task","");
 			taskDescription.toggleClass("completed");
@@ -80,7 +81,7 @@
 			alert(data.error.message);
 		}
 		
-	    $('#tasks').append(data);
+	    $('#tasks').append("<li>" + data.task.description + "</li>");
 	    $('#tasks').children("li:last").effect("highlight", {}, 1000);
 	    $('a#hideAddTaskForm').click();
 	}
