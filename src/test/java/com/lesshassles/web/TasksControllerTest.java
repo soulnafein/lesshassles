@@ -88,7 +88,7 @@ public final class TasksControllerTest {
 	}
 
 	@Test
-	public void shouldReturnTaskInJsonFormat() {
+	public void shouldReturnTaskInHtmlFormat() {
 		request.setRequestURI(String.format("/tasklists/%d/tasks/%d.htm",
 				A_TASK_LIST_ID, A_TASK_ID));
 		Task task = new Task("A task from DB");
@@ -97,7 +97,7 @@ public final class TasksControllerTest {
 		ModelAndView mav = controller.show(request);
 
 		assertNotNull(mav);
-		assertViewName(mav, "taskShowJson");
+		assertViewName(mav, "taskShow");
 		assertModelAttributeAvailable(mav, "task");
 		Task taskInModel = (Task) mav.getModel().get("task");
 		assertEquals(task, taskInModel);
