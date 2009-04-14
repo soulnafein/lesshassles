@@ -27,5 +27,6 @@
 	<definition name="dashboard" template="/WEB-INF/jsp/layout.jsp">
 		<put-attribute name="title" value="Lesshassles - Dashboard" />
 		<put-attribute name="body" value="/WEB-INF/jsp/dashboard/show.jsp" />
+		<put-attribute name="scripts" value="/WEB-INF/jsp/dashboard/showJs.jsp" />
 	</definition>		
 </tiles-definitions>

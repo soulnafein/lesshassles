@@ -20,6 +20,7 @@ import com.lesshassles.model.TaskList;
 import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.TaskService;
 import com.lesshassles.model.User;
+import com.lesshassles.model.UserService;
 
 import static org.mockito.Mockito.*;
 
@@ -33,13 +34,16 @@ public class DashboardControllerTest {
 	AuthenticationService authenticationService;
 	
 	@Mock
-	private TaskListService taskListService;
+	TaskListService taskListService;
+	
+	@Mock
+	UserService userService; 
 	
 	DashboardController controller;
 	
 	@Before
 	public void setUp() {
-		controller = new DashboardController(taskService, authenticationService, taskListService);
+		controller = new DashboardController(taskService, authenticationService, taskListService, userService);
 	}
 	
 	@Test

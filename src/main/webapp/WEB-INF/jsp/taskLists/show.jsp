@@ -8,7 +8,7 @@
 </form>
 <ul id="tasks">
 	<c:forEach items="${taskList.tasks}" var="task">
-		<%@ include file="/WEB-INF/jsp/tasks/show.jsp" %>
+		<%@ include file="/WEB-INF/jsp/tasks/show.jsp" %>		
 	</c:forEach>
 </ul>
 <form id="assignTask" action="/tasklists/${taskList.id}/tasks/0-assign.htm" style="display:none">
@@ -17,7 +17,6 @@
 	<input class="_cancel" type="button" value="Cancel" />
 	<input id="assignee" name="assignee" type="hidden" value="" />
 </form>
-
 <a id="showAddTaskForm" href="#">Add another task</a>
 <form:form modelAttribute="task" action="/tasklists/${taskList.id}/tasks/new.htm" cssStyle="display:none">
 	<p>

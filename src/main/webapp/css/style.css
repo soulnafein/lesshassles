@@ -8,10 +8,24 @@ body {
 	font-family: helvetica, sans-serif, arial, verdana,;
 }
 
+
 .completed {
 	text-decoration: line-through;
 }
 
+#taskLists {
+	float:left;
+	width:70%;
+}
+
+#sidebar {
+	float:left;
+	width:30%;
+}
+
+#tasksAssignedToUser img.assignTask {
+	display:none;
+}
 	
 	
 	

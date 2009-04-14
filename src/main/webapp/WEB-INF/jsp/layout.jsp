@@ -7,14 +7,15 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title><tiles:getAsString name="title"/></title>
-		<link href="/yahoo-reset.css" rel="stylesheet" type="text/css" />
+		<link href="/css/yahoo-reset.css" rel="stylesheet" type="text/css" />
 		<link href="/css/style.css" rel="stylesheet" type="text/css" />
 		<link href="/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
 		<link href="/css/jquery.tooltip.css" rel="stylesheet" type="text/css" />
-		<script src="/js/jquery.js" type="text/javascript"></script>
+		<link type="text/css" href="/css/cupertino/jquery-ui-1.7.1.custom.css" rel="Stylesheet" />	
+		<script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-ui-1.7.1.custom.min.js"></script>
 		<script src="/js/jquery.validate.pack.js" type="text/javascript"></script>
 		<script src="/js/jquery.form.js" type="text/javascript"></script>
-		<script src="/js/jquery.ui.all.js" type="text/javascript"></script>
 		<script src="/js/jquery.autocomplete.js" type="text/javascript"></script>
 		<script src="/js/jquery.tooltip.js" type="text/javascript"></script>
 		<tiles:insertAttribute ignore="true" name="scripts" />

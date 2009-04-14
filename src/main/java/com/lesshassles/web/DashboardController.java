@@ -6,6 +6,7 @@ import com.lesshassles.model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,11 +20,17 @@ public class DashboardController {
 	
 	TaskListService taskListService;
 	
+	UserService userService;
+	
 	@Autowired
-	public DashboardController(TaskService taskService, AuthenticationService authenticationService, TaskListService taskListService) {
+	public DashboardController(TaskService taskService, 
+								AuthenticationService authenticationService, 
+								TaskListService taskListService,
+								UserService userService) {
 		this.taskService = taskService;
 		this.authenticationService = authenticationService;
 		this.taskListService = taskListService;
+		this.userService = userService;
 	}
 
 	@RequestMapping(value = "index.htm")
@@ -41,5 +48,13 @@ public class DashboardController {
 		mav.addObject("taskLists", taskLists);
 		
 		return mav;
+	}
+	
+	@ModelAttribute("users")
+	public List<User> userList() {
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		List<User> users = userService.findAllActiveUsers();
+		users.remove(authenticatedUser);
+		return users;
 	}
 }
