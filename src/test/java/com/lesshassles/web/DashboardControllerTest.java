@@ -1,6 +1,7 @@
 package com.lesshassles.web;
 
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
 
 import java.util.ArrayList;
@@ -15,8 +16,11 @@ import org.mockito.runners.MockitoJUnit44Runner;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lesshassles.model.Task;
+import com.lesshassles.model.TaskList;
+import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.TaskService;
 import com.lesshassles.model.User;
+import com.lesshassles.model.UserService;
 
 import static org.mockito.Mockito.*;
 
@@ -29,11 +33,17 @@ public class DashboardControllerTest {
 	@Mock
 	AuthenticationService authenticationService;
 	
+	@Mock
+	TaskListService taskListService;
+	
+	@Mock
+	UserService userService; 
+	
 	DashboardController controller;
 	
 	@Before
 	public void setUp() {
-		controller = new DashboardController(taskService, authenticationService);
+		controller = new DashboardController(taskService, authenticationService, taskListService, userService);
 	}
 	
 	@Test
@@ -51,7 +61,7 @@ public class DashboardControllerTest {
 		ModelAndView mav = controller.show();
 		
 		assertViewName(mav, "dashboard");
-		
+
 	}
 	
 	@Test
@@ -64,11 +74,48 @@ public class DashboardControllerTest {
 		tasksAssignedToUser.add(new Task("A task"));
 		when(taskService.getTasksAssignedToUser(loggedUser)).thenReturn(tasksAssignedToUser);
 		
-		List<Task> model = controller.tasksAssignedToUser();
+		ModelAndView mav = controller.show();
 		
-		assertNotNull(model);
-		assertEquals(tasksAssignedToUser, model);
+		assertEquals(tasksAssignedToUser, mav.getModel().get("tasksAssignedToUser"));
+		
+	}
+	
+	@Test
+	public void shouldDisplayListOfTasksAssignedToOtherUsers() {
+		
+		User loggedUser = new User("test@test.com");
+		when(authenticationService.getAuthenticatedUser()).thenReturn(loggedUser);
+		
+		List<Task> tasksAssignedToOtherUsers = new ArrayList<Task>();
+		tasksAssignedToOtherUsers.add(new Task("A task"));
+		when(taskService.getTasksAssignedToOtherUsers(loggedUser)).thenReturn(tasksAssignedToOtherUsers);
+		
+		ModelAndView mav = controller.show();
+		
+		assertEquals(tasksAssignedToOtherUsers, mav.getModel().get("tasksAssignedToOtherUsers"));
+		
+	}
+	
+	@Test
+	public void shouldShowTaskLists() {
+		final Integer A_TASK_LIST_ID = 15;
+		TaskList taskList = new TaskList("A task list").setId(A_TASK_LIST_ID)
+				.addTask(new Task("Task 1"))
+				.addTask(new Task("Task 2"))
+				.addTask(new Task("Task 3"));
 
+		List<TaskList> taskLists = new ArrayList<TaskList>();
+		taskLists.add(taskList);
+
+		User authenticatedUser = new User("test@test.tst");
+		when(authenticationService.getAuthenticatedUser()).thenReturn(
+				authenticatedUser);
+		when(taskListService.findByOwner(authenticatedUser)).thenReturn(
+				taskLists);
+		
+		ModelAndView mav = controller.show();
+		
+		assertModelAttributeAvailable(mav, "taskLists");
 	}
 	
 }

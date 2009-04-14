@@ -1,13 +1,9 @@
 package com.lesshassles.web;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.ModelAndViewAssert.assertModelAttributeAvailable;
 import static org.springframework.test.web.ModelAndViewAssert.assertViewName;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +54,7 @@ public class TaskListControllerTest {
 	}
 
 	@Test
-	public void shouldSaveTaskListAndShowTaskListViewPage() {
+	public void shouldCreateTaskListAndRedirect() {
 		final String name = "My task list";
 		TaskList taskList = new TaskList(name);
 
@@ -73,7 +69,32 @@ public class TaskListControllerTest {
 				A_TASK_LIST_ID);
 		assertEquals(expectedView, view);
 		assertEquals(authenticatedUser, taskList.getOwner());
+	}
+	
+	@Test
+	public void shouldUpdateTaskListAndReturnStatusInJsonFormat() {
+		TaskList taskList = new TaskList("A task list");
+		taskList.setId(A_TASK_LIST_ID);
+		taskList.addTask(new Task("Task 1"));
+		taskList.addTask(new Task("Task 2"));
+		taskList.addTask(new Task("Task 3"));
 		
+		request.setRequestURI(String
+				.format("/tasklists/%d-edit.htm", A_TASK_LIST_ID));
+
+		when(authenticationService.getAuthenticatedUser()).thenReturn(
+				authenticatedUser);
+		when(
+				taskListService.findByIdAndOwner(A_TASK_LIST_ID,
+						authenticatedUser)).thenReturn(taskList);
+		
+		String taskListName = "A new tasklist name";
+		
+		String view = controller.updateTaskList(taskListName, request);
+		
+		verify(taskListService).update(taskList);
+		assertEquals(taskListName, taskList.getName());
+		assertEquals("ajaxRequestResult", view);
 	}
 
 	@Test
@@ -104,24 +125,25 @@ public class TaskListControllerTest {
 	}
 
 	@Test
-	public void shouldShowTaskLists() {
-		TaskList taskList = new TaskList("A task list").setId(A_TASK_LIST_ID)
-				.addTask(new Task("Task 1"))
-				.addTask(new Task("Task 2"))
-				.addTask(new Task("Task 3"));
-
-		List<TaskList> taskLists = new ArrayList<TaskList>();
-		taskLists.add(taskList);
+	public void shouldDeleteATaskListAndRedirectToDashboard() {
+		TaskList taskList = new TaskList("A task list");
+		taskList.setId(A_TASK_LIST_ID);
+		taskList.addTask(new Task("Task 1"));
+		taskList.addTask(new Task("Task 2"));
+		taskList.addTask(new Task("Task 3"));
+		
+		request.setRequestURI(String
+				.format("/tasklists/%d-delete.htm", A_TASK_LIST_ID));
 
 		when(authenticationService.getAuthenticatedUser()).thenReturn(
 				authenticatedUser);
-		when(taskListService.findByOwner(authenticatedUser)).thenReturn(
-				taskLists);
+		when(
+				taskListService.findByIdAndOwner(A_TASK_LIST_ID,
+						authenticatedUser)).thenReturn(taskList);
 		
-		ModelAndView mav = controller.browse();
+		String view = controller.deleteTaskList(request);
 		
-		assertNotNull(mav);
-		assertViewName(mav, "taskListBrowse");
-		assertModelAttributeAvailable(mav, "taskLists");
+		verify(taskListService).delete(taskList);
+		assertEquals("redirect:/dashboard/index.htm", view);
 	}
 }

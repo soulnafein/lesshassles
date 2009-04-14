@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.lesshassles.model.Task;
@@ -72,11 +73,32 @@ public class TaskListController {
 		return users;
 	}
 
-	@RequestMapping(value = "browse.htm")
-	public ModelAndView browse() {
+	@RequestMapping(value = "*-edit.htm")
+	public String updateTaskList(@RequestParam String taskListName, HttpServletRequest request) {
+		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
+				".*?(\\d*?)-edit\\.htm", "$1"));
+
 		User authenticatedUser = authenticationService.getAuthenticatedUser();
-		List<TaskList> taskLists = taskListService
-				.findByOwner(authenticatedUser);
-		return new ModelAndView("taskListBrowse", "taskLists", taskLists);
+		TaskList taskList = taskListService.findByIdAndOwner(id,
+				authenticatedUser);
+		taskList.setName(taskListName);
+		
+		taskListService.update(taskList);
+
+		return "ajaxRequestResult";
+	}
+
+	@RequestMapping(value = "*-delete.htm")
+	public String deleteTaskList(HttpServletRequest request) {
+		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
+				".*?(\\d*?)-delete\\.htm", "$1"));
+
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		TaskList taskList = taskListService.findByIdAndOwner(id,
+				authenticatedUser);
+		
+		taskListService.delete(taskList);
+
+		return "redirect:/dashboard/index.htm";
 	}
 }

@@ -18,20 +18,43 @@ public class DashboardController {
 	
 	AuthenticationService authenticationService;
 	
+	TaskListService taskListService;
+	
+	UserService userService;
+	
 	@Autowired
-	public DashboardController(TaskService taskService, AuthenticationService authenticationService) {
+	public DashboardController(TaskService taskService, 
+								AuthenticationService authenticationService, 
+								TaskListService taskListService,
+								UserService userService) {
 		this.taskService = taskService;
 		this.authenticationService = authenticationService;
+		this.taskListService = taskListService;
+		this.userService = userService;
 	}
 
 	@RequestMapping(value = "index.htm")
 	public ModelAndView show() {
-		return new ModelAndView("dashboard");
-	}
-
-	@ModelAttribute("tasksAssignedToUser")
-	public List<Task> tasksAssignedToUser() {
+		ModelAndView mav = new ModelAndView("dashboard");
 		User loggedUser = authenticationService.getAuthenticatedUser();
-		return taskService.getTasksAssignedToUser(loggedUser);
+		
+		List<Task> tasksAssignedToUser = taskService.getTasksAssignedToUser(loggedUser);
+		mav.addObject("tasksAssignedToUser", tasksAssignedToUser);
+		
+		List<Task> tasksAssignedToOtherUsers = taskService.getTasksAssignedToOtherUsers(loggedUser);
+		mav.addObject("tasksAssignedToOtherUsers", tasksAssignedToOtherUsers);
+		
+		List<TaskList> taskLists = taskListService.findByOwner(loggedUser);
+		mav.addObject("taskLists", taskLists);
+		
+		return mav;
+	}
+	
+	@ModelAttribute("users")
+	public List<User> userList() {
+		User authenticatedUser = authenticationService.getAuthenticatedUser();
+		List<User> users = userService.findAllActiveUsers();
+		users.remove(authenticatedUser);
+		return users;
 	}
 }

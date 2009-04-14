@@ -18,7 +18,6 @@ import com.lesshassles.model.TaskService;
 import com.lesshassles.model.TaskStatus;
 import com.lesshassles.model.User;
 import com.lesshassles.model.UserService;
-import com.lesshassles.model.exceptions.DuplicateObjectException;
 
 @Controller
 @RequestMapping("/tasklists/*/tasks/*.htm")
@@ -43,19 +42,15 @@ public class TasksController {
 	@RequestMapping(value = "new.htm", method = RequestMethod.POST)
 	public String submitForm(Task task, HttpServletRequest request) {
 
-		task.setStatus(TaskStatus.Open);
-		
 		Integer taskListId = Integer.parseInt(request.getRequestURI()
 				.replaceAll(".*?\\/tasklists\\/(\\d*?)\\/.*", "$1"));
 		
 		User authenticatedUser = authenticationService.getAuthenticatedUser();
 		
 		TaskList taskList = taskListService.findByIdAndOwner(taskListId, authenticatedUser);
-		try {
-			taskList.addTask(task);
-		} catch(DuplicateObjectException ex) {
-			return "taskErrorDuplicateEntry";
-		}
+		
+		taskList.addTask(task);
+
 		taskListService.update(taskList);
 
 		return String.format("redirect:/tasklists/%d/tasks/%d.htm", taskList
@@ -71,7 +66,7 @@ public class TasksController {
 
 		Task task = taskService.findById(taskId);
 
-		return new ModelAndView("taskShowJson", "task", task);
+		return new ModelAndView("taskShow", "task", task);
 
 	}
 	
