@@ -18,6 +18,11 @@ import com.lesshassles.model.TaskListService;
 import com.lesshassles.model.User;
 import com.lesshassles.model.UserService;
 
+/**
+ * Web controller responsible for all the interactions with tasklists.
+ * @author david
+ *
+ */
 @Controller
 @RequestMapping("/tasklists/*.htm")
 public class TaskListController {
@@ -35,11 +40,18 @@ public class TaskListController {
 		this.userService = userService;
 	}
 
+	/**
+	 * Shows an empty Tasklist creation form
+	 */
 	@RequestMapping(value = "new.htm", method = RequestMethod.GET)
 	public ModelAndView showForm() {
 		return new ModelAndView("taskListForm").addObject(new TaskList(""));
 	}
 
+	/**
+	 * Process the data submitted by a task creation form
+	 * @param taskList
+	 */
 	@RequestMapping(value = "new.htm", method = RequestMethod.POST)
 	public String submitForm(@ModelAttribute("taskList") TaskList taskList) {
 		User authenticatedUser = authenticationService.getAuthenticatedUser();
@@ -49,6 +61,11 @@ public class TaskListController {
 		return view;
 	}
 
+	/**
+	 * Show a tasklist
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "*.htm")
 	public ModelAndView show(HttpServletRequest request) {
 
@@ -73,6 +90,11 @@ public class TaskListController {
 		return users;
 	}
 
+	/**
+	 * Used to process renaming of tasklsit 
+	 * @param taskListName
+	 * @param request
+	 */
 	@RequestMapping(value = "*-edit.htm")
 	public String updateTaskList(@RequestParam String taskListName, HttpServletRequest request) {
 		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(
@@ -88,6 +110,11 @@ public class TaskListController {
 		return "ajaxRequestResult";
 	}
 
+	/**
+	 * Process the deletion of a tasklist
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "*-delete.htm")
 	public String deleteTaskList(HttpServletRequest request) {
 		Integer id = Integer.parseInt(request.getRequestURI().replaceAll(

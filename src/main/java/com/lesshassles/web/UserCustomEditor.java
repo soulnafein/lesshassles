@@ -5,6 +5,12 @@ import java.beans.PropertyEditorSupport;
 import com.lesshassles.model.User;
 import com.lesshassles.model.UserService;
 
+/**
+ * This class is used by Spring in order to automatically
+ * bind a string containing the id of a user posted in a form
+ * @author david
+ *
+ */
 public class UserCustomEditor extends PropertyEditorSupport {
 	private UserService userService;
 	

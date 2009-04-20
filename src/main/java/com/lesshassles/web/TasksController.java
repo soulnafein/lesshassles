@@ -23,6 +23,12 @@ import com.lesshassles.model.TaskStatus;
 import com.lesshassles.model.User;
 import com.lesshassles.model.UserService;
 
+/**
+ * Process of the web events needed for all
+ * the processing of tasks
+ * @author david
+ *
+ */
 @Controller
 @RequestMapping("/tasklists/*/tasks/*.htm")
 public class TasksController {
@@ -43,6 +49,11 @@ public class TasksController {
 		this.userService = userService;
 	}
 
+	/**
+	 * Process the data submitted by ajax requests for a task creation
+	 * @param task
+	 * @param request
+	 */
 	@RequestMapping(value = "new.htm", method = RequestMethod.POST)
 	public String submitForm(Task task, HttpServletRequest request) {
 
@@ -62,6 +73,11 @@ public class TasksController {
 
 	}
 
+	/**
+	 * Display a task
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "*.htm", method = RequestMethod.GET)
 	public ModelAndView show(HttpServletRequest request) {
 

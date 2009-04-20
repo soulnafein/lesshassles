@@ -1,8 +1,6 @@
 package com.lesshassles.model;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -20,6 +18,11 @@ import org.hibernate.validator.Pattern;
 
 import com.lesshassles.model.exceptions.DuplicateObjectException;
 
+/**
+ * Entity representing a Tasklist owned by a User
+ * @author david
+ *
+ */
 @Entity
 public class TaskList {
 	
@@ -71,6 +74,13 @@ public class TaskList {
 		return this;
 	}
 
+	/**
+	 * All the tasks added to a tasklist
+	 * will be automatically cascaded in the database
+	 * when saving their tasklist
+	 * @throws DuplicateObjectException when trying to add a duplicate task
+	 * @param task
+	 */
 	public TaskList addTask(Task task) {
 		task.setTaskList(this);
 		if (!tasks.add(task)) {
@@ -83,6 +93,9 @@ public class TaskList {
 		return Collections.unmodifiableSortedSet(tasks);
 	}
 
+	/**
+	 * Two tasklists are considered equals if they have the same id
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

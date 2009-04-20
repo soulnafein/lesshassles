@@ -8,6 +8,13 @@ import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * Data access object used by Spring Security
+ * in order to load Users information from the database
+ * @author david
+ *
+ */
 @Service
 @Transactional
 public class UserDetailsServiceHibernate implements UserDetailsService {

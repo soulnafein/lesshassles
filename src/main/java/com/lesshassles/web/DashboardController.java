@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * Web controller used to respond to events necessery
+ * for the correct functioning of the Dashboard page
+ * @author david
+ *
+ */
 @Controller
 @RequestMapping("/dashboard/*.htm")
 public class DashboardController {

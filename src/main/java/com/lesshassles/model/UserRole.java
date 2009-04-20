@@ -2,6 +2,12 @@ package com.lesshassles.model;
 
 import org.springframework.security.GrantedAuthority;
 
+/**
+ * This class represent the only role available in this
+ * application. This class is required by Spring Security
+ * @author david
+ *
+ */
 public class UserRole implements GrantedAuthority {
 	public String getAuthority() {
 		return "ROLE_USER";

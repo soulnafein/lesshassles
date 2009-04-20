@@ -8,6 +8,13 @@ import org.hibernate.validator.NotNull;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.userdetails.UserDetails;
 
+/**
+ * Implementation of the UserDetails interface
+ * required by Spring Security for validation.
+ * It represent a User of our system
+ * @author david
+ *
+ */
 @Entity
 public class User implements UserDetails {
 	
@@ -90,6 +97,10 @@ public class User implements UserDetails {
 		return true;
 	}
 	
+	/**
+	 * Two User instances are considered equal when
+	 * their email is the same
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

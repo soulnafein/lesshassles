@@ -6,6 +6,13 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * Simple Service Layer class providing 
+ * data access methods for the User class
+ * @author david
+ *
+ */
 @Service
 @Transactional
 public class UserService {

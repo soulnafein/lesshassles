@@ -3,6 +3,12 @@ package com.lesshassles.model;
 import java.util.Date;
 import java.util.Comparator;
 
+/**
+ * Comparator used by the tasks sorted set collection in Tasklist
+ * @see Tasklist
+ * @author david
+ *
+ */
 public class DeadlineComparator implements Comparator<Task> {
 
 	public int compare(Task task1, Task task2) {

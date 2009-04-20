@@ -13,6 +13,13 @@ import javax.persistence.ManyToOne;
 import org.hibernate.validator.NotNull;
 import org.hibernate.validator.Pattern;
 
+/**
+ * Entity representing an entry in a Tasklist
+ * It is mapped using Hibernate annotations for
+ * O/R mappings and data constraints
+ * @author david
+ *
+ */
 @Entity
 public class Task {
 
@@ -102,6 +109,10 @@ public class Task {
 		return this;
 	}
 	
+	/**
+	 * Two tasks are considered equals if they 
+	 * are part of the same Tasklists and they have the same description
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {

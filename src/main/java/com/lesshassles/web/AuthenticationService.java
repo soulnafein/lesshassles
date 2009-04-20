@@ -5,6 +5,11 @@ import org.springframework.stereotype.Service;
 
 import com.lesshassles.model.User;
 
+/**
+ * Retrieves the current logged user
+ * @author david
+ *
+ */
 @Service
 public class AuthenticationService {
 

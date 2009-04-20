@@ -3,11 +3,17 @@ package com.lesshassles.model;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.ObjectNotFoundException;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This class follows the Service Layer pattern
+ * It mainly provide CRUD functionalities for the Task class
+ * @author david
+ */
 @Service
 @Transactional
 public class TaskService {
@@ -15,6 +21,11 @@ public class TaskService {
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	/**
+	 * Retrieve a task for the specified id
+	 * @param id
+	 * @throws ObjectNotFoundException when providing an invalid id
+	 */
 	public Task findById(Integer id) {
 		return (Task) sessionFactory.getCurrentSession().load(Task.class, id);
 	}
@@ -29,6 +40,10 @@ public class TaskService {
 		task.setAssignee(null);
 	}
 
+	/**
+	 * Retrieves a list of tasks assigned to a user sorted by deadline
+	 * @param loggedUser
+	 */
 	public List<Task> getTasksAssignedToUser(User loggedUser) {
 		return (List<Task>)sessionFactory.getCurrentSession()
 					.createQuery(	"select task from Task task " +
@@ -45,6 +60,11 @@ public class TaskService {
 		task.setStatus(status);
 	}
 
+	/**
+	 * Retrieve a list of tasks owned by a specific User and
+	 * assigned to other users. The result is sorted by deadline.
+	 * @param loggedUser
+	 */
 	public List<Task> getTasksAssignedToOtherUsers(User loggedUser) {
 		return (List<Task>)sessionFactory.getCurrentSession()
 		.createQuery(	"select task from Task task " +
