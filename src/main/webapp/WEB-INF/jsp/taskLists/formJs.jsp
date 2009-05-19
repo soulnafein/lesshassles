@@ -8,13 +8,14 @@ $().ready(function() {
 		rules: {
 			name: {
 				required: true,
-				validTaskListName: true
+				validTaskListName: true,
+        errorElement: "em"
 			}
 		},
 		messages: {
 			name: {
 				required: "Please enter a name for your new list.",
-				validTaskListName: "The names you have chosen contains invalid characters (allowed characters: letters, digits, spaces and ().'-)"
+				validTaskListName: "The name chosen contains invalid characters (allowed: letters, digits, spaces and ().'-)"
 			}
 		}
 	});

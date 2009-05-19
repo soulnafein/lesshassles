@@ -7,10 +7,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title><tiles:getAsString name="title"/></title>
-		<link href="/css/yahoo-reset.css" rel="stylesheet" type="text/css" />
-		<link href="/css/yahoo-base.css" rel="stylesheet" type="text/css" />
-		<link href="/css/style.css" rel="stylesheet" type="text/css" />
-		
+	  <link rel="stylesheet" href="/css/blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="/css/blueprint/print.css" type="text/css" media="print"/> 
+    <!--[if IE]>
+      <link rel="stylesheet" href="/css/blueprint/ie.css" type="text/css" media="screen, projection">
+    <![endif]-->	
+	  <link rel="stylesheet" href="/css/style.css" type="text/css"> 
 		
 		<script type="text/javascript" src="/js/jquery-1.3.2.min.js"></script>
 		<link type="text/css" href="/css/cupertino/jquery-ui-1.7.1.custom.css" rel="Stylesheet" />
@@ -27,8 +29,17 @@
 		<tiles:insertAttribute ignore="true" name="scripts" />
 	</head>
 	<body>
-		<div id="content">
-			<tiles:insertAttribute name="body" />
+    <div id="header" class="box-1"> 
+      <ul id="mainNavigation"> 
+        <li><a href="/">Dashboard</a></li>
+        <li><a href="/tasklists/new.htm">Create a new List</a></li>
+        <li><a href="/session/logout.htm">Logout</a></li>
+      </ul>
+    </div>
+		<div class="container">
+      <div class="span-24 last">
+			  <tiles:insertAttribute name="body" />
+      </div>
 		</div>
 	</body>
 </html>

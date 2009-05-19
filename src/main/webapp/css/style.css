@@ -2,25 +2,46 @@
 						GLOBAL
 -------------------------------------------------*/
 
-body {
-	margin: 0 auto;
-	padding: 0;
-	font-family: helvetica, sans-serif, arial, verdana,;
+#header {
+  height: 20px;
+  margin-bottom:10px;
 }
 
+
+ul#mainNavigation li {
+  width:100px;
+  display:inline;
+  margin-right:50px;
+}
+
+.box-1 {
+  border:1px solid #dedede;
+  background-color:#f8f8ff;
+  padding: 10px;
+}
+
+  .box-1 h2 {
+    background-color:#d8d8df;
+    padding:1px;
+    text-align:center;
+  }
+
+  ul {
+    list-style-type:none;
+  }
 
 .completed {
 	text-decoration: line-through;
 }
 
-#taskLists {
-	float:left;
-	width:70%;
+.error {
+  white-space:nowrap;
 }
 
-#sidebar {
-	float:left;
-	width:30%;
+input.error {
+  border:1px solid #dddddd;
+  background:white;
+  padding:5px;
 }
 
 #tasksAssignedToUser img.assignTask {
